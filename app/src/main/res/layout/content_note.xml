@@ -27,12 +27,12 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/note_name_text"
+                android:id="@+id/rss_url_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:ems="10"
-                android:hint="URL"
+                android:hint="RSS URL"
                 android:inputType="textPersonName"
                 tools:layout_editor_absoluteX="68dp"
                 tools:layout_editor_absoluteY="69dp" />
@@ -50,12 +50,12 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/note_hint_text"
+                android:id="@+id/rss_name_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:ems="10"
-                android:hint="Name"
+                android:hint="RSS Name"
                 android:inputType="textPersonName"
                 tools:layout_editor_absoluteX="67dp"
                 tools:layout_editor_absoluteY="156dp" />

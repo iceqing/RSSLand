@@ -1,6 +1,8 @@
 package cc.iceq.rss
 
+import android.content.ContentValues
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.view.MenuItem
 
@@ -18,7 +20,7 @@ class NoteActivity : AppCompatActivity() {
 
         val actionBar = supportActionBar
         if (actionBar != null) {
-            actionBar.title = "Add Note"
+            actionBar.title = "Add RSS"
         }
         actionBar!!.setDisplayShowTitleEnabled(true)
         // 决定左上角图标的右侧是否有向左的小箭头, true
@@ -28,8 +30,20 @@ class NoteActivity : AppCompatActivity() {
 
         val btn: Button = findViewById(R.id.note_save_btn)
         btn.setOnClickListener {
-            val dbHelper = MyDatabaseHelper(this, "rss01.db", 1)
-            dbHelper.writableDatabase
+            val dbHelper = MyDatabaseHelper(this, "rss02.db", 1)
+            val db = dbHelper.writableDatabase
+
+            var name: String = findViewById<EditText>(R.id.rss_name_text).text.toString()
+            if (null == name) {
+                name = ""
+            }
+
+            val values1 = ContentValues().apply {
+                put("name", name)
+                put("author", "author1")
+                put("url", findViewById<EditText>(R.id.rss_url_text).text.toString())
+            }
+            db.insert("rss01", null, values1)
             val toast = Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT)
             toast.show();
             this.finish()
