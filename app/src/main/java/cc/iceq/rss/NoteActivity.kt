@@ -6,6 +6,7 @@ import android.view.MenuItem
 
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import cc.iceq.rss.dao.MyDatabaseHelper
 import cc.iceq.rss.databinding.ActivityNoteBinding
 
 class NoteActivity : AppCompatActivity() {
@@ -26,6 +27,13 @@ class NoteActivity : AppCompatActivity() {
         actionBar.setDisplayShowHomeEnabled(false)
 
         val btn: Button = findViewById(R.id.note_save_btn)
+        btn.setOnClickListener {
+            val dbHelper = MyDatabaseHelper(this, "rss01.db", 1)
+            dbHelper.writableDatabase
+            val toast = Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT)
+            toast.show();
+            this.finish()
+        }
     }
 
     private var isOpenEye = false

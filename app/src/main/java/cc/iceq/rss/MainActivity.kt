@@ -33,7 +33,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
-    var articleService = ArticleServiceImpl();
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,64 +62,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         Log.i("[INFO]", "enter main activity!")
-        val mContext: Context = this;
-        GlobalScope.launch(errorHandler) {
-            withContext(Dispatchers.IO) {
-                // 执行你的耗时操作代码
-                var allBtnList = articleService.queryAll("https://iceq.cc/atom.xml")
-                doOnUiCode(allBtnList, mContext);
-            }
-        }
         super.onResume()
     }
 
-    private fun dpToPixel(dp: Float) =
-        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics).toInt()
 
-
-    val errorHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
-        Log.e("error", "error when request11111", throwable)
-        // 发生异常时的捕获
-    }
-
-
-    private suspend fun doOnUiCode(feed: SyndFeed, context: Context) {
-        withContext(Dispatchers.Main) {
-            // 更新你的UI
-            Log.i("INFO", "allBtnList: $feed")
-            val mainLine: LinearLayout = findViewById(R.id.main_line)
-
-            mainLine.removeAllViews()
-
-            if (feed.entries.isEmpty()) {
-                Toast.makeText(context, "查询内容为空", Toast.LENGTH_SHORT).show()
-            }
-
-            feed.entries.forEach { item ->
-                val dpToPixel = dpToPixel(60f)
-                val articleLayout = LayoutInflater.from(context).inflate(R.layout.article_layout, null) as ConstraintLayout
-                val textView:TextView = articleLayout.findViewById(R.id.articleTitle)
-                textView.height = dpToPixel
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18f)
-                textView.text = item.title
-                textView.gravity= Gravity.CENTER_VERTICAL
-                textView.setOnClickListener {
-                    Log.i("d", "enter my activity!")
-                    val intent = Intent(Intent.ACTION_VIEW,	Uri.parse(item.uri));
-                    startActivity(intent);
-                }
-                articleLayout.background = resources.getDrawable(R.drawable.main_list_item, context.theme)
-                val textView2:TextView = articleLayout.findViewById(R.id.articleTimeAndAuthor)
-                var author = item.author
-                if ((author==null || "".equals(author)) && feed.authors.size>0) {
-                    author = feed.authors[0].name
-                }
-                textView2.text="" + DateTime(item.publishedDate.time).toString("yyyy-MM-dd") + " " + author
-                Log.i("INFO", "item:$item")
-                mainLine.addView(articleLayout)
-            }
-        }
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will

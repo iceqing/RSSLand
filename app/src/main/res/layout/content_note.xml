@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:ems="10"
-                android:hint="Name"
+                android:hint="URL"
                 android:inputType="textPersonName"
                 tools:layout_editor_absoluteX="68dp"
                 tools:layout_editor_absoluteY="69dp" />
@@ -50,35 +50,12 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/note_passwd_text"
-                android:layout_width="200dp"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:ems="10"
-                android:hint="Password"
-                android:inputType="textPassword"
-                tools:layout_editor_absoluteX="67dp"
-                tools:layout_editor_absoluteY="156dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="25dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/shape"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <EditText
                 android:id="@+id/note_hint_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:ems="10"
-                android:hint="Hint"
+                android:hint="Name"
                 android:inputType="textPersonName"
                 tools:layout_editor_absoluteX="67dp"
                 tools:layout_editor_absoluteY="156dp" />
