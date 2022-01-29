@@ -6,12 +6,11 @@ import android.view.MenuItem
 
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import cc.iceq.rss.databinding.ActivityNoteBinding
 import cc.iceq.rss.model.Feed
 import cc.iceq.rss.service.ArticleServiceImpl
+import kotlinx.android.synthetic.main.content_note.*
 
 class NoteActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityNoteBinding
     val articleService = ArticleServiceImpl()
 
 
@@ -29,14 +28,14 @@ class NoteActivity : AppCompatActivity() {
         // 有小箭头，并且图标可以点击
         actionBar.setDisplayShowHomeEnabled(false)
 
-        val btn: Button = findViewById(R.id.note_save_btn)
+        val btn: Button = note_save_btn
         btn.setOnClickListener {
-            var name: String = findViewById<EditText>(R.id.rss_name_text).text.toString()
+            var name: String = rss_name_text.text.toString()
             if (null == name) {
                 name = ""
             }
 
-            var feed  = Feed(name, "author", findViewById<EditText>(R.id.rss_url_text).text.toString());
+            var feed  = Feed(name, "author", rss_url_text.text.toString());
             articleService.insert(feed)
             val toast = Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT)
             toast.show();

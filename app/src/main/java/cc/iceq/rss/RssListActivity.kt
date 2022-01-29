@@ -7,18 +7,13 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MenuItem
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.navigation.ui.AppBarConfiguration
-import cc.iceq.rss.databinding.ActivityMainBinding
 import cc.iceq.rss.databinding.RssListActivityBinding
 import cc.iceq.rss.service.ArticleServiceImpl
-import cc.iceq.rss.ui.main.RssListFragment
+import kotlinx.android.synthetic.main.content_rss_list.*
 
 class RssListActivity : AppCompatActivity() {
-
-    private lateinit var appBarConfiguration: AppBarConfiguration
 
     private lateinit var binding: RssListActivityBinding
 
@@ -50,7 +45,7 @@ class RssListActivity : AppCompatActivity() {
 
     override fun onResume() {
         Log.i("[INFO]", "enter RssListFragment!")
-        val mainLineRssList = findViewById<LinearLayout>(R.id.main_line_rssList)
+        val mainLineRssList = main_line_rssList
         val queryMock = articleService.queryAll()
         queryMock.forEach {
                 item ->
