@@ -2,14 +2,18 @@ package cc.iceq.rss.service
 
 import android.content.Context
 import cc.iceq.rss.RssApplication
-import cc.iceq.rss.dao.MyDatabaseHelper
+import cc.iceq.rss.dao.AppDatabase
 import cc.iceq.rss.model.ArticleInfo
+import cc.iceq.rss.model.Feed
 import com.rometools.rome.feed.synd.SyndFeed
 import com.rometools.rome.io.SyndFeedInput
 import com.rometools.rome.io.XmlReader
 import java.net.URL
 
 class ArticleServiceImpl : ArticleService {
+
+    val feedDao = AppDatabase.getDatabase(RssApplication.content).feedDao();
+
     override fun queryAll(url: String): SyndFeed {
 //        Log.i("INFO", "url is $url")
         val feed: SyndFeed = SyndFeedInput().build(XmlReader(URL(url)))
@@ -18,25 +22,18 @@ class ArticleServiceImpl : ArticleService {
     }
 
 
-    override fun queryMock(): ArrayList<ArticleInfo> {
+    override fun insert(feed: Feed): Long {
+        return feedDao.insertFeed(feed)
+    }
 
-        val dbHelper = MyDatabaseHelper(RssApplication.content, "rss02.db", 1)
-        val db = dbHelper.writableDatabase
-
-        val cursor = db.query("rss01", null, null, null, null, null, null)
-
+    override fun queryAll(): ArrayList<ArticleInfo> {
         val list= ArrayList<ArticleInfo>();
+        val findAll = feedDao.findAll()
 
-        if (cursor.moveToFirst()) {
-            do {
-                val nameIndex = cursor.getColumnIndex("name")
-                val name = cursor.getString(nameIndex)
-
-                val urlIndex = cursor.getColumnIndex("url")
-                val url = cursor.getString(urlIndex)
-
-                val authorIndex = cursor.getColumnIndex("author")
-                val author = cursor.getString(authorIndex)
+        findAll.forEach {item ->
+                val name = item.name
+                val url =item.url
+                val author = item.author
 
                 val arrticle1 = ArticleInfo();
                 arrticle1.title = name;
@@ -44,7 +41,6 @@ class ArticleServiceImpl : ArticleService {
                 arrticle1.author = author
                 arrticle1.desc = name
                 list.add(arrticle1)
-            }while (cursor.moveToNext())
         }
 
         return list;

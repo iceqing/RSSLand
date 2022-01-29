@@ -1,18 +1,19 @@
 package cc.iceq.rss
 
-import android.content.ContentValues
 import android.os.Bundle
-import android.text.Editable
 import android.util.Log
 import android.view.MenuItem
 
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import cc.iceq.rss.dao.MyDatabaseHelper
 import cc.iceq.rss.databinding.ActivityNoteBinding
+import cc.iceq.rss.model.Feed
+import cc.iceq.rss.service.ArticleServiceImpl
 
 class NoteActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNoteBinding
+    val articleService = ArticleServiceImpl()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,20 +31,13 @@ class NoteActivity : AppCompatActivity() {
 
         val btn: Button = findViewById(R.id.note_save_btn)
         btn.setOnClickListener {
-            val dbHelper = MyDatabaseHelper(this, "rss02.db", 1)
-            val db = dbHelper.writableDatabase
-
             var name: String = findViewById<EditText>(R.id.rss_name_text).text.toString()
             if (null == name) {
                 name = ""
             }
 
-            val values1 = ContentValues().apply {
-                put("name", name)
-                put("author", "author1")
-                put("url", findViewById<EditText>(R.id.rss_url_text).text.toString())
-            }
-            db.insert("rss01", null, values1)
+            var feed  = Feed(name, "author", findViewById<EditText>(R.id.rss_url_text).text.toString());
+            articleService.insert(feed)
             val toast = Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT)
             toast.show();
             this.finish()

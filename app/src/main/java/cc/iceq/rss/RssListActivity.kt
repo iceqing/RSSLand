@@ -51,7 +51,7 @@ class RssListActivity : AppCompatActivity() {
     override fun onResume() {
         Log.i("[INFO]", "enter RssListFragment!")
         val mainLineRssList = findViewById<LinearLayout>(R.id.main_line_rssList)
-        val queryMock = articleService.queryMock()
+        val queryMock = articleService.queryAll()
         queryMock.forEach {
                 item ->
             val dpToPixel = dpToPixel(60f)
