@@ -1,18 +1,10 @@
 package cc.iceq.rss
 
-import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.util.TypedValue
-import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -21,12 +13,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import cc.iceq.rss.databinding.ActivityMainBinding
-import cc.iceq.rss.service.ArticleServiceImpl
-import com.rometools.rome.feed.synd.SyndFeed
-import kotlinx.coroutines.*
-import org.joda.time.DateTime
 
 class MainActivity : AppCompatActivity() {
 
@@ -81,12 +68,23 @@ class MainActivity : AppCompatActivity() {
 
         return when (item.itemId) {
             R.id.action_addRss -> {
-                Log.i("NoteDetailActivity", "编辑")
+                Log.i("NoteActivity", "编辑")
                 val newIntent = Intent(this@MainActivity, NoteActivity::class.java)
                 startActivity(newIntent)
                 return true
             }
-            R.id.action_settings -> true
+            R.id.action_rssList -> {
+                Log.i("RssListActivity", "编辑")
+                val newIntent = Intent(this@MainActivity, RssListActivity::class.java)
+                startActivity(newIntent)
+                return true
+            }
+            R.id.action_settings -> {
+                Log.i("RssListActivity", "编辑")
+                val newIntent = Intent(this@MainActivity, SettingsActivity::class.java)
+                startActivity(newIntent)
+                return true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }

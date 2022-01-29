@@ -12,4 +12,10 @@
         android:orderInCategory="100"
         android:title="@string/action_addRss"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_rssList"
+        android:orderInCategory="100"
+        android:title="@string/action_rssList"
+        app:showAsAction="never" />
 </menu>
