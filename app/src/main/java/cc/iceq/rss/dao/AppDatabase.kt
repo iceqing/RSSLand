@@ -21,7 +21,7 @@ abstract class AppDatabase :RoomDatabase() {
 
             return Room.databaseBuilder(context.applicationContext,
                 AppDatabase::class.java,
-                "RssLand.db").
+                "RssLand01.db").
             allowMainThreadQueries().build().apply {
                     instance=this
             }

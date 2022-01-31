@@ -21,10 +21,12 @@ import cc.iceq.rss.service.ArticleServiceImpl
 import com.rometools.rome.feed.synd.SyndFeed
 import kotlinx.coroutines.*
 import org.joda.time.DateTime
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 
 class HomeFragment : Fragment() {
 
-    private lateinit var homeViewModel: HomeViewModel
+    private val sharedViewModel: HomeViewModel by activityViewModels()
     private var _binding: FragmentHomeBinding? = null
 
     // This property is only valid between onCreateView and
@@ -38,28 +40,37 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        refresh()
 
-
+        sharedViewModel.text.observe(viewLifecycleOwner, Observer {
+            Log.i("INFO", "observer refresh##############")
+            refresh()
+        })
         return root
     }
 
     override fun onResume() {
         Log.i("[INFO]", "enter HomeFragment!")
-        GlobalScope.launch(errorHandler) {
-            withContext(Dispatchers.IO) {
-                // 执行你的耗时操作代码
-                var allBtnList = articleService.queryAll("https://iceq.cc/atom.xml")
-                doOnUiCode(allBtnList);
-            }
-        }
+        refresh()
         super.onResume()
     }
 
+    private fun refresh() {
+        var url = sharedViewModel.text.value.toString()
+        GlobalScope.launch(errorHandler) {
+            withContext(Dispatchers.IO) {
+                // 执行你的耗时操作代码
+                if (null == url || "".equals(url)) {
+                    url = "https://iceq.cc/atom.xml"
+                }
+                Log.i("INFO", "url is " + url)
+                var allBtnList = articleService.queryAll(url)
+                doOnUiCode(allBtnList);
+            }
+        }
+    }
 
 
     private fun dpToPixel(dp: Float) =
@@ -76,9 +87,8 @@ class HomeFragment : Fragment() {
         withContext(Dispatchers.Main) {
             // 更新你的UI
 
-
-            Log.i("INFO", "allBtnList: $feed")
-            val mainLine: LinearLayout =  binding.mainLine
+//            Log.i("INFO", "allBtnList: $feed")
+            val mainLine: LinearLayout = binding.mainLine
 
             mainLine.removeAllViews()
 
@@ -88,25 +98,27 @@ class HomeFragment : Fragment() {
 
             feed.entries.forEach { item ->
                 val dpToPixel = dpToPixel(60f)
-                val articleLayout = LayoutInflater.from(context).inflate(R.layout.article_layout, null) as ConstraintLayout
-                val textView:TextView = articleLayout.findViewById(R.id.articleTitle)
+                val articleLayout = LayoutInflater.from(context)
+                    .inflate(R.layout.article_layout, null) as ConstraintLayout
+                val textView: TextView = articleLayout.findViewById(R.id.articleTitle)
                 textView.height = dpToPixel
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18f)
                 textView.text = item.title
-                textView.gravity= Gravity.CENTER_VERTICAL
+                textView.gravity = Gravity.CENTER_VERTICAL
                 textView.setOnClickListener {
                     Log.i("d", "enter my activity!")
-                    val intent = Intent(Intent.ACTION_VIEW,	Uri.parse(item.uri));
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(item.uri));
                     startActivity(intent);
                 }
                 val theme = requireContext().theme
                 articleLayout.background = resources.getDrawable(R.drawable.main_list_item, theme)
-                val textView2:TextView = articleLayout.findViewById(R.id.articleTimeAndAuthor)
+                val textView2: TextView = articleLayout.findViewById(R.id.articleTimeAndAuthor)
                 var author = item.author
-                if ((author==null || "".equals(author)) && feed.authors.size>0) {
+                if ((author == null || "".equals(author)) && feed.authors.size > 0) {
                     author = feed.authors[0].name
                 }
-                textView2.text="" + DateTime(item.publishedDate.time).toString("yyyy-MM-dd") + " " + author
+                textView2.text =
+                    "" + DateTime(item.publishedDate.time).toString("yyyy-MM-dd") + " " + author
                 Log.i("INFO", "item:$item")
                 mainLine.addView(articleLayout)
             }

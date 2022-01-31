@@ -15,4 +15,5 @@ class RssApplication : Application() {
         super.onCreate()
         content = applicationContext;
     }
+
 }

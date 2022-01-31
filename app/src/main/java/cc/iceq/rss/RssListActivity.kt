@@ -36,7 +36,6 @@ class RssListActivity : AppCompatActivity() {
         actionBar.setDisplayHomeAsUpEnabled(true)
         // 有小箭头，并且图标可以点击
         actionBar.setDisplayShowHomeEnabled(false)
-
     }
 
 
@@ -59,9 +58,7 @@ class RssListActivity : AppCompatActivity() {
             val theme = this.theme
             articleLayout.background = resources.getDrawable(R.drawable.main_list_item, theme)
             val textView2: TextView = articleLayout.findViewById(R.id.articleTimeAndAuthor)
-            var author = item.author
-            author =item.author
-            textView2.text="" + author
+            textView2.text="" + item.url
             Log.i("INFO", "item:$item")
             mainLineRssList.addView(articleLayout)
         }

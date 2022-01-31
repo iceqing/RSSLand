@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -14,12 +15,18 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import cc.iceq.rss.databinding.ActivityMainBinding
+import cc.iceq.rss.service.ArticleServiceImpl
+import cc.iceq.rss.ui.home.HomeViewModel
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
+    val articleService = ArticleServiceImpl();
+
+    //这个是共享ViewModel
+    private val sharedViewModel: HomeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,13 +52,26 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+        val queryAll = articleService.queryAll()
+        queryAll.forEach { item ->
+            val itemId: Int = (item.id).toInt()
+            navView.menu.add(10001, itemId, 1, item.title)
+        }
+
+        navView.setNavigationItemSelectedListener { item ->
+            Log.i("INFO", "nav start ###########" + item.itemId)
+            val url = articleService.queryUrlById(item.itemId)
+            Log.i("INFO", "get db url is $url")
+            sharedViewModel.setUrl(url)
+            drawerLayout.closeDrawers()
+            true
+        }
     }
 
     override fun onResume() {
         Log.i("[INFO]", "enter main activity!")
         super.onResume()
     }
-
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

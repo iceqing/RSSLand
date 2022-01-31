@@ -1,6 +1,5 @@
 package cc.iceq.rss.service
 
-import android.content.Context
 import cc.iceq.rss.RssApplication
 import cc.iceq.rss.dao.AppDatabase
 import cc.iceq.rss.model.ArticleInfo
@@ -26,6 +25,10 @@ class ArticleServiceImpl : ArticleService {
         return feedDao.insertFeed(feed)
     }
 
+    override fun queryUrlById(itemId: Int): String {
+        return feedDao.findByItemId(itemId.toLong()).get(0).url
+    }
+
     override fun queryAll(): ArrayList<ArticleInfo> {
         val list= ArrayList<ArticleInfo>();
         val findAll = feedDao.findAll()
@@ -35,12 +38,12 @@ class ArticleServiceImpl : ArticleService {
                 val url =item.url
                 val author = item.author
 
-                val arrticle1 = ArticleInfo();
-                arrticle1.title = name;
-                arrticle1.url = url
-                arrticle1.author = author
-                arrticle1.desc = name
-                list.add(arrticle1)
+                val articleInfo = ArticleInfo(item.id);
+                articleInfo.title = name;
+                articleInfo.url = url
+                articleInfo.author = author
+                articleInfo.desc = name
+                list.add(articleInfo)
         }
 
         return list;

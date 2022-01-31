@@ -35,7 +35,7 @@ class NoteActivity : AppCompatActivity() {
                 name = ""
             }
 
-            var feed  = Feed(name, "author", rss_url_text.text.toString());
+            var feed  = Feed(name, rss_url_text.text.toString(),"author");
             articleService.insert(feed)
             val toast = Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT)
             toast.show();

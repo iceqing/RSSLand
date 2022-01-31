@@ -13,4 +13,8 @@ interface FeedDao {
 
     @Query("select * from Feed")
     fun findAll():List<Feed>
+
+
+    @Query("select * from Feed where id=:id")
+    fun findByItemId(id:Long):List<Feed>
 }
