@@ -46,6 +46,7 @@ class RssListActivity : AppCompatActivity() {
         Log.i("[INFO]", "enter RssListFragment!")
         val mainLineRssList = main_line_rssList
         val queryMock = articleService.queryAll()
+        mainLineRssList.removeAllViews()
         queryMock.forEach {
                 item ->
             val dpToPixel = dpToPixel(60f)
