@@ -106,8 +106,9 @@ class HomeFragment : Fragment() {
                 textView.text = item.title
                 textView.gravity = Gravity.CENTER_VERTICAL
                 textView.setOnClickListener {
-                    Log.i("d", "enter my activity!")
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(item.uri));
+                    Log.i("INFO", "item is " + item)
+                    Log.i("INFO", "enter my activity!, url is " + item.uri)
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(item.link));
                     startActivity(intent);
                 }
                 val theme = requireContext().theme
