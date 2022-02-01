@@ -52,11 +52,7 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-        val queryAll = articleService.queryAll()
-        queryAll.forEach { item ->
-            val itemId: Int = (item.id).toInt()
-            navView.menu.add(10001, itemId, 1, item.title)
-        }
+
 
         navView.setNavigationItemSelectedListener { item ->
             Log.i("INFO", "nav start ###########" + item.itemId)
@@ -70,6 +66,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         Log.i("[INFO]", "enter main activity!")
+
+        val queryAll = articleService.queryAll()
+        binding.navView.menu.removeGroup(10001)
+        queryAll.forEach { item ->
+            val itemId: Int = (item.id).toInt()
+            binding.navView.menu.add(10001, itemId, 1, item.title)
+        }
         super.onResume()
     }
 

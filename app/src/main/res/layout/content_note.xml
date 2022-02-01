@@ -76,6 +76,14 @@
                 android:layout_height="45dp"
                 android:background="@drawable/save_btn"
                 android:text="Save" />
+
+
+            <Button
+                android:id="@+id/note_search_btn"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/save_btn"
+                android:text="Search" />
         </LinearLayout>
 
 

@@ -101,7 +101,7 @@ class HomeFragment : Fragment() {
                     .inflate(R.layout.article_layout, null) as ConstraintLayout
                 val textView: TextView = articleLayout.findViewById(R.id.articleTitle)
                 textView.height = dpToPixel
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18f)
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17f)
                 textView.text = item.title
                 textView.gravity = Gravity.CENTER_VERTICAL
                 textView.setOnClickListener {
