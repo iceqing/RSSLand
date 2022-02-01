@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import cc.iceq.rss.databinding.RssListActivityBinding
 import cc.iceq.rss.service.ArticleServiceImpl
+import cc.iceq.rss.util.DpUtil
 import kotlinx.android.synthetic.main.content_rss_list.*
 
 class RssListActivity : AppCompatActivity() {
@@ -39,9 +40,6 @@ class RssListActivity : AppCompatActivity() {
     }
 
 
-    private fun dpToPixel(dp: Float) =
-        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics).toInt()
-
     override fun onResume() {
         Log.i("[INFO]", "enter RssListFragment!")
         val mainLineRssList = main_line_rssList
@@ -49,7 +47,7 @@ class RssListActivity : AppCompatActivity() {
         mainLineRssList.removeAllViews()
         queryMock.forEach {
                 item ->
-            val dpToPixel = dpToPixel(60f)
+            val dpToPixel = DpUtil.dpToPixel(60f, resources)
             val articleLayout = LayoutInflater.from(this).inflate(R.layout.article_layout, null) as ConstraintLayout
             val textView: TextView = articleLayout.findViewById(R.id.articleTitle)
             textView.height = dpToPixel

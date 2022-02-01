@@ -15,3 +15,5 @@
 .cxx
 local.properties
 .gradle/
+app/release
+key

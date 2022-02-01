@@ -22,6 +22,7 @@ import kotlinx.coroutines.*
 import org.joda.time.DateTime
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import cc.iceq.rss.util.DpUtil.dpToPixel
 
 class HomeFragment : Fragment() {
 
@@ -64,16 +65,14 @@ class HomeFragment : Fragment() {
                 if (null == url || "".equals(url)) {
                     url = "https://iceq.cc/atom.xml"
                 }
-                Log.i("INFO", "url is " + url)
-                var allBtnList = articleService.queryAll(url)
-                doOnUiCode(allBtnList);
+                Log.i("INFO", "url is $url")
+                var syncFeed = articleService.findSyncFeedByUrl(url)
+                if (syncFeed!=null) {
+                    doOnUiCode(syncFeed);
+                }
             }
         }
     }
-
-
-    private fun dpToPixel(dp: Float) =
-        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics).toInt()
 
 
     val errorHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
@@ -96,7 +95,7 @@ class HomeFragment : Fragment() {
             }
 
             feed.entries.forEach { item ->
-                val dpToPixel = dpToPixel(60f)
+                val dpToPixel = dpToPixel(60f, resources)
                 val articleLayout = LayoutInflater.from(context)
                     .inflate(R.layout.article_layout, null) as ConstraintLayout
                 val textView: TextView = articleLayout.findViewById(R.id.articleTitle)

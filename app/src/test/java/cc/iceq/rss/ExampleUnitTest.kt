@@ -1,12 +1,14 @@
 package cc.iceq.rss
 
 import cc.iceq.rss.service.ArticleServiceImpl
+import com.rometools.rome.feed.synd.SyndFeed
+import com.rometools.rome.io.SyndFeedInput
+import com.rometools.rome.io.XmlReader
 
 import org.junit.Test
 
 import org.junit.Assert.*
-
-
+import java.net.URL
 
 
 /**
@@ -22,8 +24,7 @@ class ExampleUnitTest {
 
     @Test
     fun addition_isCorrect1() {
-        var a = ArticleServiceImpl();
-        val queryAll = a.queryAll("https://iceq.cc/atom.xml")
-        println("queryAll = ${queryAll}")
+        val feed: SyndFeed = SyndFeedInput().build(XmlReader(URL("https://iceq.cc/atom.xml")))
+        println("queryAll = ${feed}")
     }
 }

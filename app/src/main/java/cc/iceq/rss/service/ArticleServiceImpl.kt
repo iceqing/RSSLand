@@ -1,5 +1,6 @@
 package cc.iceq.rss.service
 
+import android.util.Log
 import cc.iceq.rss.RssApplication
 import cc.iceq.rss.dao.AppDatabase
 import cc.iceq.rss.model.ArticleInfo
@@ -11,10 +12,13 @@ import java.net.URL
 
 class ArticleServiceImpl : ArticleService {
 
-    val feedDao = AppDatabase.getDatabase(RssApplication.content).feedDao();
+    val feedDao = AppDatabase.getDatabase(RssApplication.context).feedDao();
 
-    override fun queryAll(url: String): SyndFeed {
-//        Log.i("INFO", "url is $url")
+    override fun findSyncFeedByUrl(url: String): SyndFeed? {
+        if (url==null || "".equals(url)) {
+            return null
+        }
+        Log.i("INFO", "url is $url")
         val feed: SyndFeed = SyndFeedInput().build(XmlReader(URL(url)))
 //        Log.i("INFO", "list is $feed")
         return feed

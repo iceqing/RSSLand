@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
             Log.i("INFO", "nav start ###########" + item.itemId)
             val url = articleService.queryUrlById(item.itemId)
             Log.i("INFO", "get db url is $url")
-            sharedViewModel.setUrl(url)
+            sharedViewModel.postUrl(url)
             drawerLayout.closeDrawers()
             true
         }

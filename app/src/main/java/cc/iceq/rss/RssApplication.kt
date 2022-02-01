@@ -8,12 +8,12 @@ class RssApplication : Application() {
 
     companion object{
         @SuppressLint("StaticFieldLeak")
-        lateinit var content:Context;
+        lateinit var context:Context;
     }
 
     override fun onCreate() {
         super.onCreate()
-        content = applicationContext;
+        context = applicationContext;
     }
 
 }

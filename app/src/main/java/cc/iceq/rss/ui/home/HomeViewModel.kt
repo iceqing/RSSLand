@@ -12,7 +12,11 @@ class HomeViewModel() : ViewModel() {
     val text: LiveData<String> = _text
 
 
-    fun setUrl(url:String) {
+    fun setUrl(url: String) {
+        _text.value = url
+    }
+
+    fun postUrl(url: String) {
         _text.postValue(url)
     }
 }
