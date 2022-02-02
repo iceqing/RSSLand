@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.content_note.*
 import kotlinx.coroutines.*
 import java.net.URL
 
-class NoteActivity : AppCompatActivity() {
+class AddRssActivity : AppCompatActivity() {
     val articleService = ArticleServiceImpl()
 
     private lateinit var homeViewModel: HomeViewModel
@@ -73,7 +73,7 @@ class NoteActivity : AppCompatActivity() {
     private suspend fun refreshUi(
         url: String,
         syncFeed: SyndFeed?,
-        context: NoteActivity,
+        context: AddRssActivity,
         decodeStream: Bitmap?
     ) {
         withContext(Dispatchers.Main) {
