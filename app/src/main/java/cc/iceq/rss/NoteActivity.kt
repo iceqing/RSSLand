@@ -1,5 +1,7 @@
 package cc.iceq.rss
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -19,6 +21,7 @@ import cc.iceq.rss.util.ToastUtil
 import com.rometools.rome.feed.synd.SyndFeed
 import kotlinx.android.synthetic.main.content_note.*
 import kotlinx.coroutines.*
+import java.net.URL
 
 class NoteActivity : AppCompatActivity() {
     val articleService = ArticleServiceImpl()
@@ -54,7 +57,14 @@ class NoteActivity : AppCompatActivity() {
                     val url = rss_url_text.text.toString()
                     Log.i("INFO", "homeViewModel url is $url")
                     val syncFeed = articleService.findSyncFeedByUrl(url)
-                    refreshUi(url, syncFeed, context)
+                    var decodeStream: Bitmap? = null;
+
+                    if(syncFeed!=null && syncFeed.icon!=null) {
+                        val iconUrl = URL(syncFeed.icon.url)
+                        decodeStream = BitmapFactory.decodeStream(iconUrl.openStream())
+
+                    }
+                    refreshUi(url, syncFeed, context, decodeStream)
                 }
             }
         }
@@ -63,14 +73,23 @@ class NoteActivity : AppCompatActivity() {
     private suspend fun refreshUi(
         url: String,
         syncFeed: SyndFeed?,
-        context: NoteActivity
+        context: NoteActivity,
+        decodeStream: Bitmap?
     ) {
         withContext(Dispatchers.Main) {
             if (syncFeed != null) {
                 search_result.removeAllViews()
                 val articleLayout = LayoutInflater.from(context)
-                    .inflate(R.layout.article_layout, null) as ConstraintLayout
-                val textView: TextView = articleLayout.findViewById(R.id.articleTitle)
+                    .inflate(R.layout.search_rss_layout, null) as ConstraintLayout
+
+                if (decodeStream!=null) {
+                    val imageView: ImageView = articleLayout.findViewById(R.id.search_rss_icon_img)
+                    imageView.setImageBitmap(decodeStream)
+                }
+
+
+                val textView: TextView = articleLayout.findViewById(R.id.search_rss_title)
+
                 textView.text = syncFeed.title
 
                 val dpToPixel = DpUtil.dpToPixel(60f, resources)
@@ -81,7 +100,7 @@ class NoteActivity : AppCompatActivity() {
                 textView.gravity = Gravity.CENTER_VERTICAL
 
                 val textView2: TextView =
-                    articleLayout.findViewById(R.id.articleTimeAndAuthor)
+                    articleLayout.findViewById(R.id.search_rss_url)
                 textView2.text = syncFeed.link
                 articleLayout.background =
                     resources.getDrawable(R.drawable.main_list_item, theme)

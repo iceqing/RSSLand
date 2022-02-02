@@ -26,5 +26,7 @@ class ExampleUnitTest {
     fun addition_isCorrect1() {
         val feed: SyndFeed = SyndFeedInput().build(XmlReader(URL("https://iceq.cc/atom.xml")))
         println("queryAll = ${feed}")
+        val feed2: SyndFeed = SyndFeedInput().build(XmlReader(URL("https://www.ithome.com/rss")))
+        println("queryAll = ${feed2}")
     }
 }
