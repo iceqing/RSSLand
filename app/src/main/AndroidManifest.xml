@@ -7,9 +7,9 @@
     <application
         android:allowBackup="true"
         android:name=".RssApplication"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@mipmap/rss_land_lanucher_black"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/rss_land_lanucher_black_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.RSSLand">
         <activity
