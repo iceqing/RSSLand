@@ -29,7 +29,7 @@ class NoteActivity : AppCompatActivity() {
     private lateinit var homeViewModel: HomeViewModel
 
     val errorHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
-        Log.e("error", "error when request11111", throwable)
+        Log.e("error", "NoteActivity error when request", throwable)
         // 发生异常时的捕获
     }
 
@@ -114,8 +114,6 @@ class NoteActivity : AppCompatActivity() {
             }
         }
     }
-
-    private var isOpenEye = false
 
     override fun onResume() {
         super.onResume()

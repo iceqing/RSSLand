@@ -22,6 +22,7 @@ import kotlinx.coroutines.*
 import org.joda.time.DateTime
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.room.util.StringUtil
 import cc.iceq.rss.util.DpUtil.dpToPixel
 
 class HomeFragment : Fragment() {
@@ -112,11 +113,13 @@ class HomeFragment : Fragment() {
                 articleLayout.background = resources.getDrawable(R.drawable.main_list_item, theme)
                 val textView2: TextView = articleLayout.findViewById(R.id.articleTimeAndAuthor)
                 var author = item.author
-                if ((author == null || "".equals(author)) && feed.authors.size > 0) {
+                if ((author.isNullOrBlank()) && feed.authors.size > 0) {
                     author = feed.authors[0].name
                 }
-                textView2.text =
-                    "" + DateTime(item.publishedDate.time).toString("yyyy-MM-dd") + " / " + author
+                if(author.isNullOrBlank()) {
+                    author = feed.title
+                }
+                textView2.text = DateTime(item.publishedDate.time).toString("yyyy-MM-dd") + " / " + author
                 Log.i("INFO", "item:$item")
                 mainLine.addView(articleLayout)
             }
