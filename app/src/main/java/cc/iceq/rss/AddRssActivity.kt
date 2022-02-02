@@ -64,14 +64,13 @@ class AddRssActivity : AppCompatActivity() {
                         decodeStream = BitmapFactory.decodeStream(iconUrl.openStream())
 
                     }
-                    refreshUi(url, syncFeed, context, decodeStream)
+                    refreshUi(syncFeed, context, decodeStream)
                 }
             }
         }
     }
 
     private suspend fun refreshUi(
-        url: String,
         syncFeed: SyndFeed?,
         context: AddRssActivity,
         decodeStream: Bitmap?

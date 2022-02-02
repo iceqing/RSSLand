@@ -22,7 +22,6 @@ import kotlinx.coroutines.*
 import org.joda.time.DateTime
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.room.util.StringUtil
 import cc.iceq.rss.util.DpUtil.dpToPixel
 
 class HomeFragment : Fragment() {
@@ -46,7 +45,7 @@ class HomeFragment : Fragment() {
         refresh()
 
         sharedViewModel.text.observe(viewLifecycleOwner, Observer {
-            Log.i("INFO", "observer refresh##############")
+            Log.i("INFO", "HomeFragment sharedViewModel observer refresh")
             refresh()
         })
         return root
@@ -63,7 +62,7 @@ class HomeFragment : Fragment() {
         GlobalScope.launch(errorHandler) {
             withContext(Dispatchers.IO) {
                 // 执行你的耗时操作代码
-                if (null == url || "".equals(url)) {
+                if (url.isNullOrBlank()) {
                     url = "https://iceq.cc/atom.xml"
                 }
                 Log.i("INFO", "url is $url")
