@@ -88,7 +88,6 @@ class RssListActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.delete_rss_sub_item -> {
                     val ret = articleService.feedDao.deleteById(id)
-                    Log.i("INFO", "DELETE ret: $ret")
                     Log.i("INFO", "DELETE ret: $ret, itemId: ${it.itemId}")
                     refreshUI()
                     ToastUtil.showShortText("已删除订阅")
