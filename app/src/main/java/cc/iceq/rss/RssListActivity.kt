@@ -91,10 +91,10 @@ class RssListActivity : AppCompatActivity() {
                     Log.i("INFO", "DELETE ret: $ret")
                     Log.i("INFO", "DELETE ret: $ret, itemId: ${it.itemId}")
                     refreshUI()
-                    ToastUtil.makeShortText("已删除订阅").show()
+                    ToastUtil.showShortText("已删除订阅")
                 }
                 else -> {
-                    ToastUtil.makeShortText("暂未支持").show()
+                    ToastUtil.showShortText("暂未支持")
                 }
             }
             true

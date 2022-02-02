@@ -108,8 +108,7 @@ class NoteActivity : AppCompatActivity() {
                 articleLayout.setOnClickListener {
                     var feed = Feed(syncFeed.title, rss_url_text.text.toString(), syncFeed.title);
                     articleService.insert(feed)
-                    val toast = ToastUtil.makeShortText("保存成功")
-                    toast.show();
+                    ToastUtil.showShortText("保存成功")
                     context.finish()
                 }
             }
