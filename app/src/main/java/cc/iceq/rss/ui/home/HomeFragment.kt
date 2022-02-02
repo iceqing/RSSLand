@@ -76,7 +76,7 @@ class HomeFragment : Fragment() {
 
 
     val errorHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
-        Log.e("error", "error when request11111", throwable)
+        Log.e("error", "error when request", throwable)
         // 发生异常时的捕获
     }
 
@@ -84,7 +84,6 @@ class HomeFragment : Fragment() {
     private suspend fun doOnUiCode(feed: SyndFeed) {
         withContext(Dispatchers.Main) {
             // 更新你的UI
-
 //            Log.i("INFO", "allBtnList: $feed")
             val mainLine: LinearLayout = binding.mainLine
 
@@ -104,7 +103,7 @@ class HomeFragment : Fragment() {
                 textView.text = item.title
                 textView.gravity = Gravity.CENTER_VERTICAL
                 textView.setOnClickListener {
-                    Log.i("INFO", "item is " + item)
+                    Log.i("INFO", "item is $item")
                     Log.i("INFO", "enter my activity!, url is " + item.uri)
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(item.link));
                     startActivity(intent);
@@ -117,7 +116,7 @@ class HomeFragment : Fragment() {
                     author = feed.authors[0].name
                 }
                 textView2.text =
-                    "" + DateTime(item.publishedDate.time).toString("yyyy-MM-dd") + " " + author
+                    "" + DateTime(item.publishedDate.time).toString("yyyy-MM-dd") + " / " + author
                 Log.i("INFO", "item:$item")
                 mainLine.addView(articleLayout)
             }

@@ -31,9 +31,7 @@ class SettingsActivity : AppCompatActivity() {
         //监听左上角的返回箭头
         val home = android.R.id.home
         val itemId = item.itemId
-
-        Log.i("[INFO] ", "itemId: $itemId")
-        Log.i("[INFO] ", "home: $home")
+        Log.i("[INFO] ", "home: $home， itemId: $itemId")
 
         if (itemId == home) {
             Log.i("[INFO] ", "item eq home id")
