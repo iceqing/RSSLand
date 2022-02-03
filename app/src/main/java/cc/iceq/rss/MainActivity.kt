@@ -1,6 +1,7 @@
 package cc.iceq.rss
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -14,9 +15,11 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
 import cc.iceq.rss.databinding.ActivityMainBinding
 import cc.iceq.rss.service.ArticleServiceImpl
 import cc.iceq.rss.ui.home.HomeViewModel
+import cc.iceq.rss.util.ThemeUtil
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,7 +33,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val currentTheme = sharedPreferences.getString("theme_preference", "auto")
+        ThemeUtil.refreshTheme(currentTheme)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

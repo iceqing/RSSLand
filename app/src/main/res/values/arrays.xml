@@ -1,13 +1,13 @@
 <resources>
     <!-- Reply Preference -->
     <string-array name="reader_theme_entries">
-        <item>System</item>
+        <item>Auto</item>
         <item>Day</item>
         <item>Night</item>
     </string-array>
 
     <string-array name="reader_theme_values">
-        <item>system</item>
+        <item>auto</item>
         <item>day</item>
         <item>night</item>
     </string-array>

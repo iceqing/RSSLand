@@ -8,10 +8,10 @@
 <!--            app:useSimpleSummaryProvider="true" />-->
 
         <ListPreference
-            app:defaultValue="system"
+            app:defaultValue="auto"
             app:entries="@array/reader_theme_entries"
             app:entryValues="@array/reader_theme_values"
-            app:key="system"
+            app:key="theme_preference"
             app:title="@string/reader_theme_title"
             app:useSimpleSummaryProvider="true" />
 

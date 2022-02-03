@@ -108,8 +108,6 @@ class HomeFragment : Fragment() {
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(item.link));
                     startActivity(intent);
                 }
-                val theme = requireContext().theme
-                articleLayout.background = resources.getDrawable(R.drawable.main_list_item, theme)
                 val textView2: TextView = articleLayout.findViewById(R.id.articleTimeAndAuthor)
                 var author = item.author
                 if ((author.isNullOrBlank()) && feed.authors.size > 0) {

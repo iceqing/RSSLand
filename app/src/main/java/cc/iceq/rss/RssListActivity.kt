@@ -62,8 +62,6 @@ class RssListActivity : AppCompatActivity() {
             textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18f)
             textView.text = item.title
             textView.gravity = Gravity.CENTER_VERTICAL
-            val theme = this.theme
-            articleLayout.background = resources.getDrawable(R.drawable.main_list_item, theme)
             val textView2: TextView = articleLayout.findViewById(R.id.articleTimeAndAuthor)
             textView2.text = "" + item.url
             Log.i("INFO", "item:$item")

@@ -4,7 +4,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
+import cc.iceq.rss.util.ThemeUtil
+import cc.iceq.rss.util.ToastUtil
+
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -23,7 +27,17 @@ class SettingsActivity : AppCompatActivity() {
     class SettingsFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
+            val themePreference = findPreference<ListPreference>("theme_preference")
+            if (themePreference != null) {
+                themePreference.setOnPreferenceChangeListener { preference, newValue ->
+                    ThemeUtil.refreshTheme(newValue)
+                    ToastUtil.showShortText("主题已生效")
+                    true
+                }
+            }
         }
+
+
     }
 
 
