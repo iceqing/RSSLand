@@ -8,7 +8,7 @@
     <string name="action_settings">Settings</string>
     <string name="action_addRss">Add RSS</string>
     <string name="action_rssList">RSS List</string>
-    <string name="menu_home">Home</string>
+    <string name="menu_home"></string>
     <string name="menu_gallery">Gallery</string>
     <string name="title_activity_note">NoteActivity</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>

@@ -17,7 +17,7 @@ class ArticleServiceImpl : ArticleService {
     val feedDetailDao = AppDatabase.getDatabase(RssApplication.context).feedDetailDao();
 
     override fun findSyncFeedByUrl(url: String): SyndFeed? {
-        if (url == null || "".equals(url)) {
+        if (url.isBlank()) {
             return null
         }
         Log.i("INFO", "url is $url")
@@ -60,6 +60,14 @@ class ArticleServiceImpl : ArticleService {
             return ""
         }
         return findByItemId.get(0).url
+    }
+
+    override fun queryNameById(id: Long): String {
+        val findByItemId = feedDao.findByItemId(id)
+        if (findByItemId.isNullOrEmpty()) {
+            return ""
+        }
+        return findByItemId.get(0).name
     }
 
     override fun queryAll(): ArrayList<ArticleInfo> {

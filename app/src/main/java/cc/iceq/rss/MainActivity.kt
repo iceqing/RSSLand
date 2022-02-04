@@ -17,6 +17,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.core.view.isNotEmpty
+import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
 import cc.iceq.rss.databinding.ActivityMainBinding
 import cc.iceq.rss.model.ArticleInfo
@@ -61,14 +62,17 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-
         navView.setNavigationItemSelectedListener { item ->
-            Log.i("INFO", "nav start ###########" + item.itemId)
-            Log.i("INFO", "get db url is ${item.itemId}")
+            Log.i("INFO", "nav start ${item.itemId}, get db url is ${item.itemId}")
             sharedViewModel.postId(item.itemId.toLong())
             drawerLayout.closeDrawers()
             true
         }
+
+        sharedViewModel.text.observe(this, Observer {
+            Log.i("INFO", "MainActivity sharedViewModel observer refresh")
+            binding.appBarMain.toolbar.title = articleService.queryNameById(it)
+        })
     }
 
     override fun onResume() {
