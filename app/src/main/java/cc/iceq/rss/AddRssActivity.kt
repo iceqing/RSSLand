@@ -15,7 +15,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import cc.iceq.rss.model.Feed
 import cc.iceq.rss.service.ArticleServiceImpl
-import cc.iceq.rss.ui.home.HomeViewModel
 import cc.iceq.rss.util.DpUtil
 import cc.iceq.rss.util.ToastUtil
 import com.rometools.rome.feed.synd.SyndFeed
@@ -25,8 +24,6 @@ import java.net.URL
 
 class AddRssActivity : AppCompatActivity() {
     val articleService = ArticleServiceImpl()
-
-    private lateinit var homeViewModel: HomeViewModel
 
     val errorHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
         Log.e("error", "NoteActivity error when request", throwable)
@@ -47,7 +44,6 @@ class AddRssActivity : AppCompatActivity() {
         // 有小箭头，并且图标可以点击
         actionBar.setDisplayShowHomeEnabled(false)
 
-        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
 
         val btn: Button = note_search_btn
         val context = this

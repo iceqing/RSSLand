@@ -15,10 +15,13 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
+import androidx.core.view.isNotEmpty
 import androidx.preference.PreferenceManager
 import cc.iceq.rss.databinding.ActivityMainBinding
+import cc.iceq.rss.model.ArticleInfo
 import cc.iceq.rss.service.ArticleServiceImpl
-import cc.iceq.rss.ui.home.HomeViewModel
+import cc.iceq.rss.ui.home.FeedIdModel
 import cc.iceq.rss.util.ThemeUtil
 
 class MainActivity : AppCompatActivity() {
@@ -29,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     val articleService = ArticleServiceImpl();
 
     //这个是共享ViewModel
-    private val sharedViewModel: HomeViewModel by viewModels()
+    private val sharedViewModel: FeedIdModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,9 +64,8 @@ class MainActivity : AppCompatActivity() {
 
         navView.setNavigationItemSelectedListener { item ->
             Log.i("INFO", "nav start ###########" + item.itemId)
-            val url = articleService.queryUrlById(item.itemId)
-            Log.i("INFO", "get db url is $url")
-            sharedViewModel.postUrl(url)
+            Log.i("INFO", "get db url is ${item.itemId}")
+            sharedViewModel.postId(item.itemId.toLong())
             drawerLayout.closeDrawers()
             true
         }
@@ -73,12 +75,27 @@ class MainActivity : AppCompatActivity() {
         Log.i("[INFO]", "enter main activity!")
 
         val queryAll = articleService.queryAll()
-        binding.navView.menu.removeGroup(10001)
+        val menu = binding.navView.menu
+
+        if (menu.isNotEmpty()) {
+            menu.removeGroup(10001)
+            addMenu(queryAll)
+        } else {
+            addMenu(queryAll)
+            if (queryAll.isNotEmpty()) {
+                binding.navView.setCheckedItem(menu[0])
+                sharedViewModel.postId(menu[0].itemId.toLong())
+            }
+        }
+
+        super.onResume()
+    }
+
+    private fun addMenu(queryAll: ArrayList<ArticleInfo>) {
         queryAll.forEach { item ->
             val itemId: Int = (item.id).toInt()
             binding.navView.menu.add(10001, itemId, 1, item.title)
         }
-        super.onResume()
     }
 
 
