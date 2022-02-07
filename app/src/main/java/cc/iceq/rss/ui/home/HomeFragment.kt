@@ -100,10 +100,9 @@ class HomeFragment : Fragment() {
                         author = it.authors[0].name
                     }
                     if (author.isNullOrBlank()) {
-                        author = it.title
+                        author = syncFeed.title
                     }
-                    var pubDate = DateTime(it.publishedDate.time).toString("yyyy-MM-dd")
-                    val feedDetail = FeedDetail(it.title, it.link, author, feedId, pubDate)
+                    val feedDetail = FeedDetail(it.title, it.link, author, feedId, it.publishedDate.time)
                     articleService.insert(feedDetail)
                 }
             }
@@ -136,7 +135,8 @@ class HomeFragment : Fragment() {
             }
             val textView2: TextView = articleLayout.findViewById(R.id.articleTimeAndAuthor)
             var author = item.author
-            textView2.text = item.pubDate + " / " + author
+            var pubDate = DateTime(item.publishTime).toString("yyyy-MM-dd")
+            textView2.text = pubDate + " / " + author
             Log.i("INFO", "item:$item")
             mainLine.addView(articleLayout)
         }

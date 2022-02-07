@@ -8,7 +8,7 @@ data class FeedDetail(var title: String,
                       var url: String,
                       var author: String,
                       var feedId: Long,
-                      var pubDate: String) {
+                      var publishTime: Long) {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
 }
