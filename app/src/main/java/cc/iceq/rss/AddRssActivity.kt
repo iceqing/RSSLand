@@ -10,17 +10,19 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 
 import android.widget.*
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.ViewModelProvider
 import cc.iceq.rss.model.Feed
 import cc.iceq.rss.service.ArticleServiceImpl
+import cc.iceq.rss.ui.home.FeedIdModel
 import cc.iceq.rss.util.DpUtil
+import cc.iceq.rss.util.RefreshUtil
 import cc.iceq.rss.util.ToastUtil
-import com.rometools.rome.feed.synd.SyndFeed
 import kotlinx.android.synthetic.main.content_note.*
 import kotlinx.coroutines.*
-import java.net.URL
+import java.util.stream.Collectors
+import kotlin.collections.ArrayList
 
 class AddRssActivity : AppCompatActivity() {
     val articleService = ArticleServiceImpl()
@@ -29,6 +31,9 @@ class AddRssActivity : AppCompatActivity() {
         Log.e("error", "NoteActivity error when request", throwable)
         // 发生异常时的捕获
     }
+
+    //这个是共享ViewModel
+    private val sharedViewModel: FeedIdModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,66 +51,65 @@ class AddRssActivity : AppCompatActivity() {
 
 
         val btn: Button = note_search_btn
-        val context = this
         btn.setOnClickListener {
             GlobalScope.launch(errorHandler) {
                 withContext(Dispatchers.IO) {
-                    val url = rss_url_text.text.toString()
-                    Log.i("INFO", "homeViewModel url is $url")
-                    val syncFeed = articleService.findSyncFeedByUrl(url)
-                    var decodeStream: Bitmap? = null;
+                    val urlStr = rss_url_text.text.toString()
+                    Log.i("INFO", "homeViewModel url is $urlStr")
 
-                    if(syncFeed!=null && syncFeed.icon!=null) {
-                        val iconUrl = URL(syncFeed.icon.url)
-                        decodeStream = BitmapFactory.decodeStream(iconUrl.openStream())
+                    val urlList = urlStr.split("\n").stream().collect(Collectors.toList())
+                    val list = ArrayList<Feed>()
 
+                    for (url in urlList) {
+                        val syncFeed = articleService.findSyncFeedByUrl(url)
+                        if (syncFeed!=null) {
+                            val temp = Feed(syncFeed.title, url, syncFeed.title)
+                            list.add(temp)
+                        }
                     }
-                    refreshUi(syncFeed, context, decodeStream)
+//                    var decodeStream: Bitmap? = null;
+
+//                    if(syncFeed!=null && syncFeed.icon!=null) {
+//                        val iconUrl = URL(syncFeed.icon.url)
+//                        decodeStream = BitmapFactory.decodeStream(iconUrl.openStream())
+//                    }
+                    refreshUi(list, null)
                 }
             }
         }
     }
 
     private suspend fun refreshUi(
-        syncFeed: SyndFeed?,
-        context: AddRssActivity,
+        syncFeedList: List<Feed>,
         decodeStream: Bitmap?
     ) {
         withContext(Dispatchers.Main) {
-            if (syncFeed != null) {
-                search_result.removeAllViews()
-                val articleLayout = LayoutInflater.from(context)
+            search_result.removeAllViews()
+            for (feed in syncFeedList) {
+                val articleLayout = LayoutInflater.from(this@AddRssActivity)
                     .inflate(R.layout.search_rss_layout, null) as ConstraintLayout
-
-                if (decodeStream!=null) {
-                    val imageView: ImageView = articleLayout.findViewById(R.id.search_rss_icon_img)
-                    imageView.setImageBitmap(decodeStream)
-                }
-
 
                 val textView: TextView = articleLayout.findViewById(R.id.search_rss_title)
 
-                textView.text = syncFeed.title
+                textView.text = feed.name
 
                 val dpToPixel = DpUtil.dpToPixel(60f, resources)
 
                 textView.height = dpToPixel
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17f)
-                textView.text = syncFeed.title
                 textView.gravity = Gravity.CENTER_VERTICAL
 
-                val textView2: TextView =
-                    articleLayout.findViewById(R.id.search_rss_url)
-                textView2.text = syncFeed.link
+                val textView2: TextView = articleLayout.findViewById(R.id.search_rss_url)
+                textView2.text = feed.url
                 articleLayout.background =
                     resources.getDrawable(R.drawable.main_list_item, theme)
-                search_result.addView(articleLayout)
                 articleLayout.setOnClickListener {
-                    var feed = Feed(syncFeed.title, rss_url_text.text.toString(), syncFeed.title);
-                    articleService.insert(feed)
+                    val id = articleService.insert(feed)
+                    sharedViewModel.postId(id)
+                    RefreshUtil.refresh(id)
                     ToastUtil.showShortText("保存成功")
-                    context.finish()
                 }
+                search_result.addView(articleLayout)
             }
         }
     }
