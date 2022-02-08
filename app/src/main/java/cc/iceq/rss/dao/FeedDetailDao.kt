@@ -15,6 +15,9 @@ interface FeedDetailDao {
     @Query("select * from feed_detail where feedId=:feedId order by publishTime desc")
     fun findByFeedId(feedId: Long): List<FeedDetail>
 
+    @Query("delete from feed_detail where feedId=:feedId")
+    fun deleteByFeedId(feedId: Long): List<FeedDetail>
+
     @Query("select * from feed_detail where url=:url")
     fun findByUrl(url:String):List<FeedDetail>
 }
