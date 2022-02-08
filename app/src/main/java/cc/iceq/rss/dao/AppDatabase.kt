@@ -33,7 +33,7 @@ abstract class AppDatabase : RoomDatabase() {
             return Room.databaseBuilder(
                 context.applicationContext,
                 AppDatabase::class.java,
-                "RssLand08.db"
+                "RssLand09.db"
             ).allowMainThreadQueries()
 //                .addMigrations(MIGRATION_2_3)
                 .build().apply {
