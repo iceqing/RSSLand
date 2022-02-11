@@ -1,5 +1,6 @@
 package cc.iceq.rss
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -40,6 +41,7 @@ class RssListActivity : AppCompatActivity() {
         actionBar.setDisplayHomeAsUpEnabled(true)
         // 有小箭头，并且图标可以点击
         actionBar.setDisplayShowHomeEnabled(false)
+
     }
 
 
@@ -92,7 +94,9 @@ class RssListActivity : AppCompatActivity() {
                     ToastUtil.showShortText("已删除订阅")
                 }
                 else -> {
-                    ToastUtil.showShortText("暂未支持")
+                    val newIntent = Intent(this@RssListActivity, RssDetailActivity::class.java)
+                    newIntent.putExtra("rss_id", id)
+                    startActivity(newIntent)
                 }
             }
             true
@@ -107,9 +111,7 @@ class RssListActivity : AppCompatActivity() {
         val home = android.R.id.home
         val itemId = item.itemId
 
-        Log.i("[INFO] ", "itemId: $itemId")
-        Log.i("[INFO] ", "home: $home")
-
+        Log.i("[INFO] ", "itemId: $itemId, home: $home")
         if (itemId == home) {
             Log.i("[INFO] ", "item eq home id")
             this.finish()

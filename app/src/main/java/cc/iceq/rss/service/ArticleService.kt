@@ -14,4 +14,5 @@ interface ArticleService {
     fun insert(feedDetail: FeedDetail): Long
     fun containsUrl(link: String?): Boolean
     fun queryNameById(id: Long): String
+    fun findById(id: Long): Feed?
 }

@@ -70,6 +70,15 @@ class ArticleServiceImpl : ArticleService {
         return findByItemId.get(0).name
     }
 
+
+    override fun findById(id: Long): Feed? {
+        val findByItemId = feedDao.findByItemId(id)
+        if (findByItemId.isNullOrEmpty()) {
+            return null;
+        }
+        return findByItemId.get(0)
+    }
+
     override fun queryAll(): ArrayList<ArticleInfo> {
         val list = ArrayList<ArticleInfo>();
         val findAll = feedDao.findAll()

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+<!--    <item-->
+<!--        android:id="@+id/rss_detail_delete"-->
+<!--        android:icon="@drawable/ic_delete"-->
+<!--        android:title="delete_rss"-->
+<!--        app:showAsAction="always"-->
+<!--        />-->
+
+    <item
+        android:id="@+id/rss_detail_save"
+        android:icon="@drawable/ic_done"
+        android:title="save"
+        app:showAsAction="always"
+        />
+
+
+</menu>

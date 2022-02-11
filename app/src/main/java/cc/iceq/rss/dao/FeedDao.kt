@@ -3,6 +3,7 @@ package cc.iceq.rss.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import cc.iceq.rss.model.Feed
 
 @Dao
@@ -17,6 +18,10 @@ interface FeedDao {
 
     @Query("delete from Feed where id=:id")
     fun deleteById(id:Long):Int
+
+
+    @Update
+    fun updateFeed(newFeed:Feed):Int
 
 
     @Query("select * from Feed where id=:id")
