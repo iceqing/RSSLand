@@ -29,7 +29,7 @@
                 android:background="@android:color/transparent"
                 android:ems="10"
                 android:hint="RSS URL"
-                android:inputType="textPersonName"
+                android:inputType="textMultiLine"
                 tools:layout_editor_absoluteX="68dp"
                 tools:layout_editor_absoluteY="69dp" />
 

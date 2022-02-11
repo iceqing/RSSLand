@@ -108,6 +108,10 @@ class AddRssActivity : AppCompatActivity() {
                     sharedViewModel.postId(id)
                     RefreshUtil.refresh(id)
                     ToastUtil.showShortText("保存成功")
+                    if(syncFeedList.size==1) {
+                        // 如果只有一个，添加后关闭窗口
+                        this@AddRssActivity.finish()
+                    }
                 }
                 search_result.addView(articleLayout)
             }
