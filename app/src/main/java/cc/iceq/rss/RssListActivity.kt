@@ -1,7 +1,9 @@
 package cc.iceq.rss
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -11,6 +13,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.PopupMenu
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import cc.iceq.rss.databinding.RssListActivityBinding
 import cc.iceq.rss.service.ArticleServiceImpl
@@ -18,6 +21,7 @@ import cc.iceq.rss.util.DpUtil
 import cc.iceq.rss.util.ToastUtil
 import kotlinx.android.synthetic.main.content_rss_list.*
 import kotlinx.android.synthetic.main.rss_list_activity.*
+
 
 class RssListActivity : AppCompatActivity() {
 
@@ -100,7 +104,18 @@ class RssListActivity : AppCompatActivity() {
                     refreshUI()
                     ToastUtil.showShortText("已删除订阅")
                 }
-                else -> {
+
+                R.id.copy_rss_sub_item -> {
+                    val feedUrl = articleService.queryUrlById(id)
+                    val cm: ClipboardManager =
+                        getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    val mClipData = ClipData.newPlainText("Label", feedUrl)
+                     // 将ClipData内容放到系统剪贴板里。
+                    cm.setPrimaryClip(mClipData)
+                    Log.i("INFO", "copy ret: $feedUrl")
+                    ToastUtil.showShortText("已复制")
+                }
+                R.id.edit_rss_sub_item -> {
                     val newIntent = Intent(this@RssListActivity, RssDetailActivity::class.java)
                     newIntent.putExtra("rss_id", id)
                     startActivity(newIntent)

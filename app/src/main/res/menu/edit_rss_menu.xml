@@ -2,4 +2,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
         <item android:id="@+id/delete_rss_sub_item" android:title="@string/delete_rss_sub" />
         <item android:id="@+id/edit_rss_sub_item" android:title="@string/edit_rss_sub"/>
+        <item android:id="@+id/copy_rss_sub_item" android:title="@string/copy_rss_sub"/>
 </menu>
