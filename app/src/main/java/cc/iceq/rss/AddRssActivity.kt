@@ -21,6 +21,7 @@ import cc.iceq.rss.util.RefreshUtil
 import cc.iceq.rss.util.ToastUtil
 import kotlinx.android.synthetic.main.content_note.*
 import kotlinx.coroutines.*
+import java.net.URL
 import java.util.stream.Collectors
 import kotlin.collections.ArrayList
 
@@ -60,20 +61,32 @@ class AddRssActivity : AppCompatActivity() {
                     val urlList = urlStr.split("\n").stream().collect(Collectors.toList())
                     val list = ArrayList<Feed>()
 
+                    var decodeStream: Bitmap? = null;
+
                     for (url in urlList) {
                         val syncFeed = articleService.findSyncFeedByUrl(url)
-                        if (syncFeed!=null) {
+
+                        if (urlList.size == 1) {
+                            if (syncFeed != null && syncFeed.icon != null) {
+                                val iconUrl = URL(syncFeed.icon.url)
+                                Log.i("INFO", "ico url ${iconUrl}")
+                                decodeStream = BitmapFactory.decodeStream(iconUrl.openStream())
+                            } else {
+
+                                val tempUrl = URL(url)
+                                val iconUrl = URL(tempUrl.protocol + "://" + tempUrl.authority + "/favicon.ico")
+                                Log.i("INFO", "favicon.ico url ${iconUrl}")
+                                decodeStream = BitmapFactory.decodeStream(iconUrl.openStream())
+                            }
+                        }
+
+                        if (syncFeed != null) {
                             val temp = Feed(syncFeed.title, url, syncFeed.title)
                             list.add(temp)
                         }
                     }
-//                    var decodeStream: Bitmap? = null;
 
-//                    if(syncFeed!=null && syncFeed.icon!=null) {
-//                        val iconUrl = URL(syncFeed.icon.url)
-//                        decodeStream = BitmapFactory.decodeStream(iconUrl.openStream())
-//                    }
-                    refreshUi(list, null)
+                    refreshUi(list, decodeStream)
                 }
             }
         }
@@ -91,6 +104,10 @@ class AddRssActivity : AppCompatActivity() {
 
                 val textView: TextView = articleLayout.findViewById(R.id.search_rss_title)
 
+                if (decodeStream!=null) {
+                    val imageView: ImageView = articleLayout.findViewById(R.id.search_rss_icon_img)
+                    imageView.setImageBitmap(decodeStream)
+                }
                 textView.text = feed.name
 
                 val dpToPixel = DpUtil.dpToPixel(60f, resources)
@@ -108,7 +125,7 @@ class AddRssActivity : AppCompatActivity() {
                     sharedViewModel.postId(id)
                     RefreshUtil.refresh(id)
                     ToastUtil.showShortText("保存成功")
-                    if(syncFeedList.size==1) {
+                    if (syncFeedList.size == 1) {
                         // 如果只有一个，添加后关闭窗口
                         this@AddRssActivity.finish()
                     }
@@ -128,11 +145,14 @@ class AddRssActivity : AppCompatActivity() {
         val itemId = item.itemId
         Log.i("[INFO] ", "home: $home， itemId: $itemId")
 
-        if (itemId == home) {
-            Log.i("[INFO] ", "item eq home id")
-            this.finish()
-            return true
+        when (item.itemId) {
+            android.R.id.home -> {
+                Log.i("[INFO] ", "item eq home id")
+                this.finish()
+                return true
+            }
         }
+
 
         return super.onOptionsItemSelected(item)
     }

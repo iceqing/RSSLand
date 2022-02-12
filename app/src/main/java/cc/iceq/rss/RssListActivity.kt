@@ -17,6 +17,7 @@ import cc.iceq.rss.service.ArticleServiceImpl
 import cc.iceq.rss.util.DpUtil
 import cc.iceq.rss.util.ToastUtil
 import kotlinx.android.synthetic.main.content_rss_list.*
+import kotlinx.android.synthetic.main.rss_list_activity.*
 
 class RssListActivity : AppCompatActivity() {
 
@@ -42,6 +43,12 @@ class RssListActivity : AppCompatActivity() {
         // 有小箭头，并且图标可以点击
         actionBar.setDisplayShowHomeEnabled(false)
 
+
+        add_rss_btn.setOnClickListener {
+            Log.i("[INFO] ", "item eq add_rss_btn")
+            val newIntent = Intent(this, AddRssActivity::class.java)
+            startActivity(newIntent)
+        }
     }
 
 

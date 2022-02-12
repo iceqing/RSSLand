@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity() {
 
         return when (item.itemId) {
             R.id.action_addRss -> {
-                Log.i("NoteActivity", "编辑")
+                Log.i("AddRssActivity", "编辑")
                 val newIntent = Intent(this@MainActivity, AddRssActivity::class.java)
                 startActivity(newIntent)
                 return true
@@ -129,7 +129,7 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
             R.id.action_settings -> {
-                Log.i("RssListActivity", "编辑")
+                Log.i("SettingsActivity", "编辑")
                 val newIntent = Intent(this@MainActivity, SettingsActivity::class.java)
                 startActivity(newIntent)
                 return true
