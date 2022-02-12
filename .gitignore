@@ -17,3 +17,5 @@ local.properties
 .gradle/
 app/release
 key
+/deploy-docs.sh
+/docs.tar.gz
