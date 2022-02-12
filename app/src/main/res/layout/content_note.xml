@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".AddRssActivity"
-    tools:showIn="@layout/activity_note">
+    tools:showIn="@layout/activity_add_rss">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -26,7 +26,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
-                android:background="@android:color/transparent"
                 android:ems="10"
                 android:hint="RSS URL"
                 android:inputType="textMultiLine"
@@ -41,6 +40,15 @@
                 android:layout_marginTop="25dp"
                 android:background="@drawable/save_btn"
                 android:text="Search" />
+
+
+          <Button
+                android:id="@+id/note_add_add_btn"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/save_btn"
+                android:text="Add All" />
 
 
             <LinearLayout

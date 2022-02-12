@@ -15,7 +15,6 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import cc.iceq.rss.databinding.RssListActivityBinding
 import cc.iceq.rss.service.ArticleServiceImpl
 import cc.iceq.rss.util.DpUtil
 import cc.iceq.rss.util.ToastUtil
@@ -25,16 +24,12 @@ import kotlinx.android.synthetic.main.rss_list_activity.*
 
 class RssListActivity : AppCompatActivity() {
 
-    private lateinit var binding: RssListActivityBinding
-
     val articleService = ArticleServiceImpl()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = RssListActivityBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        setSupportActionBar(binding.toolbar)
+        setContentView(R.layout.rss_list_activity)
+        setSupportActionBar(toolbar)
 
         val actionBar = supportActionBar
         if (actionBar != null) {
@@ -81,6 +76,11 @@ class RssListActivity : AppCompatActivity() {
             articleLayout.setOnLongClickListener {
                 popupMenu(it, item.id)
                 true
+            }
+            articleLayout.setOnClickListener {
+                val newIntent = Intent(this@RssListActivity, RssDetailActivity::class.java)
+                newIntent.putExtra("rss_id", item.id)
+                startActivity(newIntent)
             }
             mainLineRssList.addView(articleLayout)
         }

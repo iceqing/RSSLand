@@ -32,16 +32,21 @@ class ArticleServiceImpl : ArticleService {
         return feedDetailDao.findByFeedId(feedId)
     }
 
-    override fun containsUrl(link: String?): Boolean {
+    override fun containsFeedUrl(link: String?): Boolean {
+        if (link.isNullOrBlank()) {
+            return true
+        } else {
+            val list = feedDao.findByUrl(link)
+            return !list.isEmpty()
+        }
+    }
+
+    override fun containsArticleUrl(link: String?): Boolean {
         if (link.isNullOrBlank()) {
             return true;
         } else {
             val list = feedDetailDao.findByUrl(link)
-            if (list.isEmpty()) {
-                return false;
-            }else {
-                return true
-            }
+            return !list.isEmpty()
         }
     }
 

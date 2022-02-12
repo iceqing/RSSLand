@@ -35,7 +35,7 @@ object RefreshUtil {
     private suspend fun saveToDb(feedId: Long, syncFeed: SyndFeed?) {
         withContext(Dispatchers.Main) {
             syncFeed?.entries?.forEach {
-                if (!articleService.containsUrl(it.link)) {
+                if (!articleService.containsArticleUrl(it.link)) {
                     var author = it.author
                     if ((author.isNullOrBlank()) && it.authors.size > 0) {
                         author = it.authors[0].name

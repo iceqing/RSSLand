@@ -14,6 +14,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import cc.iceq.rss.model.Feed
+import cc.iceq.rss.model.FeedWithIconExtend
 import cc.iceq.rss.service.ArticleServiceImpl
 import cc.iceq.rss.ui.home.FeedIdModel
 import cc.iceq.rss.util.DpUtil
@@ -21,12 +22,15 @@ import cc.iceq.rss.util.RefreshUtil
 import cc.iceq.rss.util.ToastUtil
 import kotlinx.android.synthetic.main.content_note.*
 import kotlinx.coroutines.*
+import java.lang.Exception
 import java.net.URL
 import java.util.stream.Collectors
 import kotlin.collections.ArrayList
 
 class AddRssActivity : AppCompatActivity() {
     val articleService = ArticleServiceImpl()
+
+    val feedList = ArrayList<Feed>()
 
     val errorHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
         Log.e("error", "NoteActivity error when request", throwable)
@@ -38,7 +42,7 @@ class AddRssActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_note)
+        setContentView(R.layout.activity_add_rss)
 
         val actionBar = supportActionBar
         if (actionBar != null) {
@@ -59,56 +63,83 @@ class AddRssActivity : AppCompatActivity() {
                     Log.i("INFO", "homeViewModel url is $urlStr")
 
                     val urlList = urlStr.split("\n").stream().collect(Collectors.toList())
-                    val list = ArrayList<Feed>()
+                    val listDeffer = ArrayList<Deferred<FeedWithIconExtend?>>()
 
                     var decodeStream: Bitmap? = null;
 
                     for (url in urlList) {
-                        val syncFeed = articleService.findSyncFeedByUrl(url)
+                        val syncFeedDeffer = async {
+                            val syncFeed = articleService.findSyncFeedByUrl(url)
+                            try {
+                                if (syncFeed != null && syncFeed.icon != null) {
+                                    val iconUrl = URL(syncFeed.icon.url)
+                                    Log.i("INFO", "ico url ${iconUrl}")
+                                    decodeStream = BitmapFactory.decodeStream(iconUrl.openStream())
+                                } else {
+                                    val tempUrl = URL(url)
+                                    val iconUrl =
+                                        URL(tempUrl.protocol + "://" + tempUrl.authority + "/favicon.ico")
+                                    Log.i("INFO", "favicon.ico url ${iconUrl}")
 
-                        if (urlList.size == 1) {
-                            if (syncFeed != null && syncFeed.icon != null) {
-                                val iconUrl = URL(syncFeed.icon.url)
-                                Log.i("INFO", "ico url ${iconUrl}")
-                                decodeStream = BitmapFactory.decodeStream(iconUrl.openStream())
+                                    decodeStream = BitmapFactory.decodeStream(iconUrl.openStream())
+                                }
+                            } catch (e: Exception) {
+                                decodeStream = null
+                            }
+                            if (syncFeed != null) {
+                                FeedWithIconExtend(syncFeed.title, url, decodeStream)
                             } else {
-
-                                val tempUrl = URL(url)
-                                val iconUrl = URL(tempUrl.protocol + "://" + tempUrl.authority + "/favicon.ico")
-                                Log.i("INFO", "favicon.ico url ${iconUrl}")
-                                decodeStream = BitmapFactory.decodeStream(iconUrl.openStream())
+                                null
                             }
                         }
 
-                        if (syncFeed != null) {
-                            val temp = Feed(syncFeed.title, url, syncFeed.title)
-                            list.add(temp)
-                        }
+                        listDeffer.add(syncFeedDeffer)
                     }
 
-                    refreshUi(list, decodeStream)
+                    refreshUi(listDeffer)
                 }
             }
         }
+
+        val addAllBtn: Button = note_add_add_btn
+        addAllBtn.setOnClickListener {
+            var success = 0;
+            var exist = 0;
+            for (feed in feedList) {
+                if (articleService.containsFeedUrl(feed.url)) {
+                    exist+=1
+                    continue
+                } else {
+                    success += 1;
+                    val id = articleService.insert(feed)
+                    sharedViewModel.postId(id)
+                    RefreshUtil.refresh(id)
+                }
+            }
+            ToastUtil.showShortText("共计：${feedList.size}个, 成功：${success}个, 跳过已保存：${exist}个")
+        }
+
     }
 
     private suspend fun refreshUi(
-        syncFeedList: List<Feed>,
-        decodeStream: Bitmap?
+        syncFeedList: List<Deferred<FeedWithIconExtend?>>
     ) {
         withContext(Dispatchers.Main) {
+            feedList.clear()
             search_result.removeAllViews()
-            for (feed in syncFeedList) {
+            for (feedExtendDefer in syncFeedList) {
+                val feedExtend = feedExtendDefer.await() ?: continue
+
+
                 val articleLayout = LayoutInflater.from(this@AddRssActivity)
                     .inflate(R.layout.search_rss_layout, null) as ConstraintLayout
 
                 val textView: TextView = articleLayout.findViewById(R.id.search_rss_title)
-
-                if (decodeStream!=null) {
+                if (feedExtend.icon != null) {
                     val imageView: ImageView = articleLayout.findViewById(R.id.search_rss_icon_img)
-                    imageView.setImageBitmap(decodeStream)
+                    imageView.setImageBitmap(feedExtend.icon)
                 }
-                textView.text = feed.name
+                textView.text = feedExtend.name
 
                 val dpToPixel = DpUtil.dpToPixel(60f, resources)
 
@@ -117,17 +148,24 @@ class AddRssActivity : AppCompatActivity() {
                 textView.gravity = Gravity.CENTER_VERTICAL
 
                 val textView2: TextView = articleLayout.findViewById(R.id.search_rss_url)
-                textView2.text = feed.url
+                textView2.text = feedExtend.url
                 articleLayout.background =
                     resources.getDrawable(R.drawable.main_list_item, theme)
+                val feed = Feed(feedExtend.name, feedExtend.url, feedExtend.name)
+
+                feedList.add(feed)
                 articleLayout.setOnClickListener {
-                    val id = articleService.insert(feed)
-                    sharedViewModel.postId(id)
-                    RefreshUtil.refresh(id)
-                    ToastUtil.showShortText("保存成功")
-                    if (syncFeedList.size == 1) {
-                        // 如果只有一个，添加后关闭窗口
-                        this@AddRssActivity.finish()
+                    if (articleService.containsFeedUrl(feedExtend.url)) {
+                        ToastUtil.showShortText("RSS已存在")
+                    } else {
+                        val id = articleService.insert(feed)
+                        sharedViewModel.postId(id)
+                        RefreshUtil.refresh(id)
+                        ToastUtil.showShortText("保存成功")
+                        if (syncFeedList.size == 1) {
+                            // 如果只有一个，添加后关闭窗口
+                            this@AddRssActivity.finish()
+                        }
                     }
                 }
                 search_result.addView(articleLayout)

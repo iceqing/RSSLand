@@ -26,4 +26,7 @@ interface FeedDao {
 
     @Query("select * from Feed where id=:id")
     fun findByItemId(id:Long):List<Feed>
+
+    @Query("select * from Feed where url=:url")
+    fun findByUrl(url:String):List<Feed>
 }
