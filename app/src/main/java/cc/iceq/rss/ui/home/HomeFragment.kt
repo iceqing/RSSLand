@@ -15,17 +15,18 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import cc.iceq.rss.R
-import cc.iceq.rss.databinding.FragmentHomeBinding
 import cc.iceq.rss.service.ArticleServiceImpl
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import cc.iceq.rss.databinding.FragmentHomeBinding
 import cc.iceq.rss.model.FeedDetail
 import cc.iceq.rss.util.DpUtil.dpToPixel
 import cc.iceq.rss.util.RefreshUtil
+import com.scwang.smart.refresh.footer.ClassicsFooter
+import com.scwang.smart.refresh.header.ClassicsHeader
 import org.joda.time.DateTime
 
 class HomeFragment : Fragment() {
-
     private val sharedViewModel: FeedIdModel by activityViewModels()
     private var _binding: FragmentHomeBinding? = null
 
@@ -49,20 +50,42 @@ class HomeFragment : Fragment() {
                 refresh()
             }
         })
+        val refreshLayout  = binding.refreshLayout
+        refreshLayout.setRefreshHeader(ClassicsHeader(context));
+        refreshLayout.setRefreshFooter(ClassicsFooter(context));
+
+        refreshLayout.setOnRefreshListener { refreshlayout ->
+            refreshDirect()
+            refreshlayout.finishRefresh()
+        }
+
+        refreshLayout.setOnLoadMoreListener { refreshlayout ->
+            refreshDirect()
+            refreshlayout.finishLoadMore()
+        }
         return root
     }
 
     override fun onResume() {
         Log.i("[INFO]", "enter HomeFragment!")
-//        refresh()
         super.onResume()
     }
 
     private fun refresh() {
-        var id = sharedViewModel.text.value.toString()
-        var feedList = articleService.findFeedDetailById(id.toLong())
+        val id = sharedViewModel.text.value.toString()
+        val feedList = articleService.findFeedDetailById(id.toLong())
         doOnUiCode(feedList)
         RefreshUtil.refresh(id.toLong())
+    }
+
+
+    private fun refreshDirect() {
+        val id = sharedViewModel.text.value.toString()
+        val refreshCallback = {
+            val feedList = articleService.findFeedDetailById(id.toLong())
+            doOnUiCode(feedList)
+        }
+        RefreshUtil.refresh(id.toLong(), refreshCallback)
     }
 
 

@@ -5,6 +5,7 @@ import cc.iceq.rss.model.FeedDetail
 import cc.iceq.rss.service.ArticleServiceImpl
 import com.rometools.rome.feed.synd.SyndFeed
 import kotlinx.coroutines.*
+import java.lang.Runnable
 
 object RefreshUtil {
 
@@ -15,7 +16,7 @@ object RefreshUtil {
         // 发生异常时的捕获
     }
 
-    fun refresh(id:Long) {
+    fun refresh(id: Long, it: Runnable?) {
         GlobalScope.launch(errorHandler) {
             withContext(Dispatchers.IO) {
                 // 执行你的耗时操作代码
@@ -25,14 +26,18 @@ object RefreshUtil {
                 } else {
                     Log.i("INFO", "url is $url")
                     var syncFeed = articleService.findSyncFeedByUrl(url)
-                    saveToDb(id, syncFeed)
+                    saveToDb(id, syncFeed, it)
                 }
 
             }
         }
     }
 
-    private suspend fun saveToDb(feedId: Long, syncFeed: SyndFeed?) {
+    fun refresh(id: Long) {
+        refresh(id, null)
+    }
+
+    private suspend fun saveToDb(feedId: Long, syncFeed: SyndFeed?, it: Runnable?) {
         withContext(Dispatchers.Main) {
             syncFeed?.entries?.forEach {
                 if (!articleService.containsArticleUrl(it.link)) {
@@ -43,11 +48,14 @@ object RefreshUtil {
                     if (author.isNullOrBlank()) {
                         author = syncFeed.title
                     }
-                    val feedDetail = FeedDetail(it.title, it.link, author, feedId, it.publishedDate.time)
+                    val feedDetail =
+                        FeedDetail(it.title, it.link, author, feedId, it.publishedDate.time)
                     articleService.insert(feedDetail)
                 }
             }
+            it?.run()
         }
     }
+
 
 }
