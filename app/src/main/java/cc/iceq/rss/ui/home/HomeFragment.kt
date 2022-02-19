@@ -51,18 +51,13 @@ class HomeFragment : Fragment() {
             }
         })
         val refreshLayout  = binding.refreshLayout
-        refreshLayout.setRefreshHeader(ClassicsHeader(context));
-        refreshLayout.setRefreshFooter(ClassicsFooter(context));
-
+        refreshLayout.setRefreshHeader(ClassicsHeader(context))
+        refreshLayout.setEnableAutoLoadMore(false)
         refreshLayout.setOnRefreshListener { refreshlayout ->
             refreshDirect()
             refreshlayout.finishRefresh()
         }
 
-        refreshLayout.setOnLoadMoreListener { refreshlayout ->
-            refreshDirect()
-            refreshlayout.finishLoadMore()
-        }
         return root
     }
 
