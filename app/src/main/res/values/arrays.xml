@@ -6,9 +6,20 @@
         <item>Night</item>
     </string-array>
 
+
+    <string-array name="reader_open_entries">
+        <item>内置浏览器</item>
+        <item>外部浏览器</item>
+    </string-array>
+
     <string-array name="reader_theme_values">
         <item>auto</item>
         <item>day</item>
         <item>night</item>
+    </string-array>
+
+    <string-array name="reader_open_values">
+        <item>inner</item>
+        <item>open</item>
     </string-array>
 </resources>

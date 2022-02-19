@@ -13,10 +13,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RSSLand">
         <activity
-            android:name=".RssDetailActivity"
+            android:name=".InnerWebView"
             android:exported="false"
             android:theme="@style/Theme.RSSLand.NoActionBar"
             />
+        <activity
+            android:name=".RssDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.RSSLand.NoActionBar" />
         <activity
             android:name=".RssListActivity"
             android:label="@string/title_activity_note"

@@ -110,6 +110,7 @@
     <!-- Messages Preferences -->
     <string name="signature_title">Your signature</string>
     <string name="reader_theme_title">Theme</string>
+    <string name="reader_open_title">内容默认打开方式</string>
 
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>

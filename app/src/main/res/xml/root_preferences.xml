@@ -16,6 +16,15 @@
             app:title="@string/reader_theme_title"
             app:useSimpleSummaryProvider="true" />
 
+
+        <ListPreference
+            app:defaultValue="inner"
+            app:entries="@array/reader_open_entries"
+            app:entryValues="@array/reader_open_values"
+            app:key="open_url_preference"
+            app:title="@string/reader_open_title"
+            app:useSimpleSummaryProvider="true" />
+
     </PreferenceCategory>
 
 

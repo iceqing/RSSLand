@@ -36,8 +36,6 @@ class SettingsActivity : AppCompatActivity() {
                 }
             }
         }
-
-
     }
 
 

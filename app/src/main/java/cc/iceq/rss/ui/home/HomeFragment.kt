@@ -1,6 +1,7 @@
 package cc.iceq.rss.ui.home
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -18,6 +19,8 @@ import cc.iceq.rss.R
 import cc.iceq.rss.service.ArticleServiceImpl
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.preference.PreferenceManager
+import cc.iceq.rss.InnerWebView
 import cc.iceq.rss.databinding.FragmentHomeBinding
 import cc.iceq.rss.model.FeedDetail
 import cc.iceq.rss.util.DpUtil.dpToPixel
@@ -50,7 +53,7 @@ class HomeFragment : Fragment() {
                 refresh()
             }
         })
-        val refreshLayout  = binding.refreshLayout
+        val refreshLayout = binding.refreshLayout
         refreshLayout.setRefreshHeader(ClassicsHeader(context))
         refreshLayout.setEnableAutoLoadMore(false)
         refreshLayout.setOnRefreshListener { refreshlayout ->
@@ -104,8 +107,19 @@ class HomeFragment : Fragment() {
             textView.setOnClickListener {
                 Log.i("INFO", "item is $item")
                 Log.i("INFO", "enter my activity!, url is " + item.url)
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(item.url));
-                startActivity(intent);
+                val sharedPreferences: SharedPreferences =
+                    PreferenceManager.getDefaultSharedPreferences(context)
+                val openUrlPreferences = sharedPreferences.getString("open_url_preference", "auto")
+                Log.i("INFO", "openUrlPreferences: $openUrlPreferences" )
+                if ("inner" == openUrlPreferences) {
+                    val intent = Intent(context, InnerWebView::class.java)
+                    intent.putExtra("url", item.url)
+                    intent.putExtra("title", item.title)
+                    startActivity(intent);
+                } else {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(item.url));
+                    startActivity(intent);
+                }
             }
             val textView2: TextView = articleLayout.findViewById(R.id.articleTimeAndAuthor)
             var author = item.author
