@@ -1,12 +1,14 @@
 package cc.iceq.rss
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.webkit.WebViewClient
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_inner_web_view.*
 import kotlinx.android.synthetic.main.inner_webview_content.*
+
 
 class InnerWebView : AppCompatActivity() {
 
@@ -16,7 +18,7 @@ class InnerWebView : AppCompatActivity() {
 
         setContentView(R.layout.activity_inner_web_view)
         setSupportActionBar(toolbar)
-
+        webview.setWebViewClient(WebViewClient())
         webview.settings.javaScriptEnabled=true
         webview.settings.domStorageEnabled=true
         val url = intent.getStringExtra("url")

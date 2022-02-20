@@ -1,7 +1,6 @@
 package cc.iceq.rss.ui.home
 
-import android.content.Intent
-import android.content.SharedPreferences
+import android.content.*
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -11,9 +10,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import cc.iceq.rss.R
 import cc.iceq.rss.service.ArticleServiceImpl
@@ -21,10 +22,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
 import cc.iceq.rss.InnerWebView
+import cc.iceq.rss.RssDetailActivity
 import cc.iceq.rss.databinding.FragmentHomeBinding
 import cc.iceq.rss.model.FeedDetail
 import cc.iceq.rss.util.DpUtil.dpToPixel
 import cc.iceq.rss.util.RefreshUtil
+import cc.iceq.rss.util.ToastUtil
 import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
 import org.joda.time.DateTime
@@ -110,7 +113,7 @@ class HomeFragment : Fragment() {
                 val sharedPreferences: SharedPreferences =
                     PreferenceManager.getDefaultSharedPreferences(context)
                 val openUrlPreferences = sharedPreferences.getString("open_url_preference", "auto")
-                Log.i("INFO", "openUrlPreferences: $openUrlPreferences" )
+                Log.i("INFO", "openUrlPreferences: $openUrlPreferences")
                 if ("inner" == openUrlPreferences) {
                     val intent = Intent(context, InnerWebView::class.java)
                     intent.putExtra("url", item.url)
@@ -121,14 +124,44 @@ class HomeFragment : Fragment() {
                     startActivity(intent);
                 }
             }
+
+            articleLayout.setOnLongClickListener {
+                popupMenu(it, item)
+                true
+            }
             val textView2: TextView = articleLayout.findViewById(R.id.articleTimeAndAuthor)
-            var author = item.author
-            var pubDate = DateTime(item.publishTime).toString("yyyy-MM-dd")
-            textView2.text = pubDate + " / " + author
-            Log.i("INFO", "item:$item")
+            val author = item.author
+            val pubDate = DateTime(item.publishTime).toString("yyyy-MM-dd")
+            textView2.text = "$pubDate / $author"
+            Log.i("INFO", "item: $item")
             mainLine.addView(articleLayout)
         }
 
+    }
+
+    private fun popupMenu(v: View?, item: FeedDetail) {
+        //定义PopupMenu对象
+        val popupMenu = PopupMenu(context, v)
+        //设置PopupMenu对象的布局
+        popupMenu.getMenuInflater().inflate(R.menu.edit_feed_menu, popupMenu.getMenu())
+        //设置PopupMenu的点击事件
+        popupMenu.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.copy_rss_sub_item -> {
+                    val cm: ClipboardManager =
+                        context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    val mClipData = ClipData.newPlainText("Label", item.url)
+                    // 将ClipData内容放到系统剪贴板里。
+                    cm.setPrimaryClip(mClipData)
+                    Log.i("INFO", "copy ret: ${item.url}")
+                    ToastUtil.showShortText("已复制")
+                }
+            }
+            true
+        }
+
+        //显示菜单
+        popupMenu.show()
     }
 
 

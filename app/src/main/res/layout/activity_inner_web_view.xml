@@ -14,6 +14,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
+            app:titleTextAppearance="@style/Toolbar.TitleText"
             android:layout_width="match_parent"
             android:layout_height="@dimen/inner_url_app_bar_height"
             android:background="?attr/colorPrimary"

@@ -112,24 +112,22 @@ class MainActivity : AppCompatActivity() {
         val home = android.R.id.home
         val itemId = item?.itemId
 
-        Log.i("NoteDetailActivity", "itemId: $itemId")
-        Log.i("NoteDetailActivity", "home: $home")
-
+        Log.i("NoteDetailActivity", "itemId: $itemId， home: $home")
         return when (item.itemId) {
             R.id.action_addRss -> {
-                Log.i("AddRssActivity", "编辑")
+                Log.i("AddRssActivity", "添加RSS")
                 val newIntent = Intent(this@MainActivity, AddRssActivity::class.java)
                 startActivity(newIntent)
                 return true
             }
             R.id.action_rssList -> {
-                Log.i("RssListActivity", "编辑")
+                Log.i("RssListActivity", "rss列表")
                 val newIntent = Intent(this@MainActivity, RssListActivity::class.java)
                 startActivity(newIntent)
                 return true
             }
             R.id.action_settings -> {
-                Log.i("SettingsActivity", "编辑")
+                Log.i("SettingsActivity", "设置")
                 val newIntent = Intent(this@MainActivity, SettingsActivity::class.java)
                 startActivity(newIntent)
                 return true

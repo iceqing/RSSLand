@@ -22,4 +22,10 @@
     <style name="Theme.RSSLand.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.RSSLand.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+    <!-- 设置Toolbar标题字体的颜色大小 -->
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">19sp</item><!--toolbar标题字体大小-->
+    </style>
 </resources>
