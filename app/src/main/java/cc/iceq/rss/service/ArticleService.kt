@@ -10,7 +10,7 @@ interface ArticleService {
     fun queryAll(): ArrayList<ArticleInfo>
     fun insert(feed: Feed): Long
     fun queryUrlById(feedId: Long): String
-    fun findFeedDetailById(feedId: Long): List<FeedDetail>
+    fun findFeedDetailById(feedId: Long, i: Int, i1: Int): List<FeedDetail>
     fun insert(feedDetail: FeedDetail): Long
     fun containsArticleUrl(link: String?): Boolean
     fun queryNameById(id: Long): String

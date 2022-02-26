@@ -28,8 +28,8 @@ class ArticleServiceImpl : ArticleService {
     }
 
 
-    override fun findFeedDetailById(feedId: Long): List<FeedDetail> {
-        return feedDetailDao.findByFeedId(feedId)
+    override fun findFeedDetailById(feedId: Long, pageIndex: Int, pageSize: Int): List<FeedDetail> {
+        return feedDetailDao.findByFeedId(feedId, pageIndex, pageSize)
     }
 
     override fun containsFeedUrl(link: String?): Boolean {

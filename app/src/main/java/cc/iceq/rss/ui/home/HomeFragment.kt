@@ -14,15 +14,14 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import cc.iceq.rss.R
 import cc.iceq.rss.service.ArticleServiceImpl
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
 import cc.iceq.rss.InnerWebView
-import cc.iceq.rss.RssDetailActivity
 import cc.iceq.rss.databinding.FragmentHomeBinding
 import cc.iceq.rss.model.FeedDetail
 import cc.iceq.rss.util.DpUtil.dpToPixel
@@ -36,11 +35,14 @@ class HomeFragment : Fragment() {
     private val sharedViewModel: FeedIdModel by activityViewModels()
     private var _binding: FragmentHomeBinding? = null
 
+    private val pageModel: PageModel by viewModels()
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
     var articleService = ArticleServiceImpl();
+    val pageSize = 15
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,10 +60,16 @@ class HomeFragment : Fragment() {
         })
         val refreshLayout = binding.refreshLayout
         refreshLayout.setRefreshHeader(ClassicsHeader(context))
-        refreshLayout.setEnableAutoLoadMore(false)
+        refreshLayout.setEnableAutoLoadMore(true)
+        refreshLayout.setRefreshFooter(ClassicsFooter(context));
         refreshLayout.setOnRefreshListener { refreshlayout ->
             refreshDirect()
             refreshlayout.finishRefresh()
+        }
+
+        refreshLayout.setOnLoadMoreListener { refreshlayout ->
+            loadMore()
+            refreshlayout.finishLoadMore()
         }
 
         return root
@@ -74,7 +82,14 @@ class HomeFragment : Fragment() {
 
     private fun refresh() {
         val id = sharedViewModel.text.value.toString()
-        val feedList = articleService.findFeedDetailById(id.toLong())
+
+        val pageNo = pageModel.pageNo.value
+        var currentSize = pageSize;
+        if (pageNo != null) {
+            currentSize = pageNo * pageSize
+        }
+
+        val feedList = articleService.findFeedDetailById(id.toLong(), 0, currentSize)
         doOnUiCode(feedList)
         RefreshUtil.refresh(id.toLong())
     }
@@ -83,10 +98,30 @@ class HomeFragment : Fragment() {
     private fun refreshDirect() {
         val id = sharedViewModel.text.value.toString()
         val refreshCallback = {
-            val feedList = articleService.findFeedDetailById(id.toLong())
+            val pageNo = pageModel.pageNo.value
+            var currentSize = pageSize;
+            if (pageNo != null) {
+                currentSize = pageNo * pageSize
+            }
+            val feedList = articleService.findFeedDetailById(id.toLong(), 0, currentSize)
             doOnUiCode(feedList)
         }
         RefreshUtil.refresh(id.toLong(), refreshCallback)
+    }
+
+
+    private fun loadMore() {
+        val id = sharedViewModel.text.value.toString()
+        val pageNo = pageModel.pageNo.value
+        if (pageNo != null) {
+            val feedList = articleService.findFeedDetailById(id.toLong(),0,pageNo*pageSize)
+            if (feedList.size == pageNo * pageSize) {
+                pageModel.postPage(pageNo + 1)
+            }else {
+                ToastUtil.showShortText("我们是有底线的")
+            }
+            doOnUiCode(feedList)
+        }
     }
 
 

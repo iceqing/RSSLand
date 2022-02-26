@@ -12,8 +12,8 @@ interface FeedDetailDao {
     @Insert
     fun insert(feedDetail: FeedDetail): Long
 
-    @Query("select * from feed_detail where feedId=:feedId order by publishTime desc")
-    fun findByFeedId(feedId: Long): List<FeedDetail>
+    @Query("select * from feed_detail where feedId=:feedId order by publishTime desc limit :pageIndex,:pageSize")
+    fun findByFeedId(feedId: Long, pageIndex:Int, pageSize:Int): List<FeedDetail>
 
     @Query("delete from feed_detail where feedId=:feedId")
     fun deleteByFeedId(feedId: Long): Int
