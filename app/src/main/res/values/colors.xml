@@ -4,7 +4,8 @@
     <color name="purple_500">#3C3F41</color>
     <color name="purple_700">#3C3F41</color>
     <color name="topColor">#00574B</color>
-    <color name="topMenuColor">#008577</color>
+    <color name="topMenuColor">#FFFFFF</color>
+    <color name="topMenuColorBackup">#008577</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>

@@ -8,6 +8,7 @@ import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import cc.iceq.rss.util.ThemeUtil
 import cc.iceq.rss.util.ToastUtil
+import kotlinx.android.synthetic.main.rss_list_activity.*
 
 
 class SettingsActivity : AppCompatActivity() {
@@ -15,6 +16,7 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_activity)
+        setSupportActionBar(toolbar)
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()

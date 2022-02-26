@@ -29,6 +29,7 @@ import cc.iceq.rss.util.RefreshUtil
 import cc.iceq.rss.util.ToastUtil
 import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
+import com.scwang.smart.refresh.layout.api.RefreshLayout
 import org.joda.time.DateTime
 
 class HomeFragment : Fragment() {
@@ -68,8 +69,7 @@ class HomeFragment : Fragment() {
         }
 
         refreshLayout.setOnLoadMoreListener { refreshlayout ->
-            loadMore()
-            refreshlayout.finishLoadMore()
+            loadMore(refreshlayout)
         }
 
         return root
@@ -110,17 +110,20 @@ class HomeFragment : Fragment() {
     }
 
 
-    private fun loadMore() {
+    private fun loadMore(refreshlayout: RefreshLayout) {
         val id = sharedViewModel.text.value.toString()
         val pageNo = pageModel.pageNo.value
         if (pageNo != null) {
-            val feedList = articleService.findFeedDetailById(id.toLong(),0,pageNo*pageSize)
+            val feedList = articleService.findFeedDetailById(id.toLong(), 0, pageNo * pageSize)
+
             if (feedList.size == pageNo * pageSize) {
                 pageModel.postPage(pageNo + 1)
-            }else {
-                ToastUtil.showShortText("我们是有底线的")
+                doOnUiCode(feedList)
+                refreshlayout.finishLoadMore()
+            } else {
+                refreshlayout.finishLoadMoreWithNoMoreData()
+                return
             }
-            doOnUiCode(feedList)
         }
     }
 
