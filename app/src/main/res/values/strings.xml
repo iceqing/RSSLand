@@ -122,4 +122,5 @@
     <string name="delete_rss_sub">删除订阅</string>
     <string name="copy_rss_sub">复制订阅url</string>
     <string name="copy_url">复制url</string>
+    <string name="share_url">分享文章</string>
 </resources>
