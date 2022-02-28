@@ -40,7 +40,7 @@
         <activity
             android:name=".AddRssActivity"
             android:label="@string/title_activity_note"
-            android:theme="@style/Theme.RSSLand" />
+            android:theme="@style/Theme.RSSLand.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

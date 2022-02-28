@@ -21,6 +21,7 @@ import cc.iceq.rss.util.DpUtil
 import cc.iceq.rss.util.RefreshUtil
 import cc.iceq.rss.util.ToastUtil
 import kotlinx.android.synthetic.main.content_note.*
+import kotlinx.android.synthetic.main.rss_list_activity.*
 import kotlinx.coroutines.*
 import java.lang.Exception
 import java.net.URL
@@ -43,6 +44,7 @@ class AddRssActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_rss)
+        setSupportActionBar(toolbar)
 
         val actionBar = supportActionBar
         if (actionBar != null) {
