@@ -1,14 +1,17 @@
 package cc.iceq.rss
 
-import android.R.attr.dialogTitle
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
+import cc.iceq.rss.util.ToastUtil
 import kotlinx.android.synthetic.main.activity_inner_web_view.*
 import kotlinx.android.synthetic.main.inner_webview_content.*
 
@@ -18,10 +21,34 @@ class InnerWebView : AppCompatActivity() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_inner_web_view)
         setSupportActionBar(toolbar)
-        webview.setWebViewClient(WebViewClient())
+        val webViewClient = object: WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean{
+                if (request == null) return false
+                val url = request.url.toString()
+                try {
+                    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        startActivity(intent)
+                        return true
+                    }
+                } catch (e: Exception) {
+                    //防止crash (如果手机上没有安装处理某个scheme开头的url的APP, 会导致crash)
+                    //没有安装该app时，返回true，表示拦截自定义链接，但不跳转，避免弹出上面的错误页面
+
+                    ToastUtil.showShortText("应用未安装App")
+                    Log.e("WebView", "shouldOverrideUrlLoading error, url: {$url}", e)
+                    return true
+                }
+                //下面的两种方式选择使用其中一种即可
+                view!!.loadUrl(url)
+                return true
+
+            }
+        }
+        webview.setWebViewClient(webViewClient)
         webview.settings.javaScriptEnabled=true
         webview.settings.domStorageEnabled=true
         val url = intent.getStringExtra("url")
